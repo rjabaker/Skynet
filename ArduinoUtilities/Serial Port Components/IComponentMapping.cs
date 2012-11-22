@@ -21,7 +21,8 @@ namespace ArduinoUtilities
 
         #region Methods
 
-        byte[] CommandPackageCode(bool turnOn);
+        byte[] DigitalWriteCommandPackageCode(bool turnOn);
+        byte[] AnalogWriteCommandPackageCode(int intensity);
 
         #endregion
     }

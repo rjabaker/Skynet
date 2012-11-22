@@ -2,11 +2,14 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ArduinoUtilities.Settings" GeneratedClassName="CommandCodes">
   <Profiles />
   <Settings>
-    <Setting Name="PinCommandCode" Type="System.Int32" Scope="Application">
+    <Setting Name="DigitalPinWriteCommandCode" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="SettingCommandCode" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="AnalogPinWriteCommandCode" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
     </Setting>
   </Settings>
 </SettingsFile>

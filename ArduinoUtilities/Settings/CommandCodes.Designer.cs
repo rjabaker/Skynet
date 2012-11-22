@@ -26,9 +26,9 @@ namespace ArduinoUtilities.Settings {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int PinCommandCode {
+        public int DigitalPinWriteCommandCode {
             get {
-                return ((int)(this["PinCommandCode"]));
+                return ((int)(this["DigitalPinWriteCommandCode"]));
             }
         }
         
@@ -38,6 +38,15 @@ namespace ArduinoUtilities.Settings {
         public int SettingCommandCode {
             get {
                 return ((int)(this["SettingCommandCode"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int AnalogPinWriteCommandCode {
+            get {
+                return ((int)(this["AnalogPinWriteCommandCode"]));
             }
         }
     }

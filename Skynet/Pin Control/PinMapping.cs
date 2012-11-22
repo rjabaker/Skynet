@@ -127,15 +127,33 @@ namespace Skynet
 
         public void SetPin(bool turnOn)
         {
-            // Build a command package. Listen for a response package. Set the pin.
-            byte[] commandPackage = CommandPackageCode(turnOn);
+            // Build a digital command package. Listen for a response package. Set the pin.
+            byte[] commandPackage = DigitalWriteCommandPackageCode(turnOn);
             toggleListeningForResponePackageEventHandler((IComponentMapping)this, true);
             SetPinEventHandler(commandPackage);
         }
 
-        public byte[] CommandPackageCode(bool turnOn)
+        public void SetPin(int intensity)
         {
-            byte commandID = (byte)CommandCodes.PinCommand;
+            // Build a analog command package. Listen for a response package. Set the pin.
+            byte[] commandPackage = AnalogWriteCommandPackageCode(intensity);
+            toggleListeningForResponePackageEventHandler((IComponentMapping)this, true);
+            SetPinEventHandler(commandPackage);
+        }
+
+        public byte[] AnalogWriteCommandPackageCode(int intensity)
+        {
+            byte commandID = (byte)CommandCodes.AnalogPinWriteCommandCode;
+            byte pinID = (byte)pinNumber;
+            byte stateID = (byte)(intensity);
+
+            byte[] commandPackage = new byte[] { commandID, pinID, stateID };
+            return commandPackage;
+        }
+
+        public byte[] DigitalWriteCommandPackageCode(bool turnOn)
+        {
+            byte commandID = (byte)CommandCodes.DigitalPinWriteCommandCode;
             byte pinID = (byte)pinNumber;
             byte stateID = (byte)(turnOn ? 1 : 0);
 

@@ -7,11 +7,11 @@ namespace ArduinoUtilities
 {
     public static class CommandCodes
     {
-        public static int PinCommand
+        public static int DigitalPinWriteCommandCode
         {
             get
             {
-                return Settings.CommandCodes.Default.PinCommandCode;
+                return Settings.CommandCodes.Default.DigitalPinWriteCommandCode;
             }
         }
 
@@ -20,6 +20,14 @@ namespace ArduinoUtilities
             get
             {
                 return Settings.CommandCodes.Default.SettingCommandCode;
+            }
+        }
+
+        public static int AnalogPinWriteCommandCode
+        {
+            get
+            {
+                return Settings.CommandCodes.Default.AnalogPinWriteCommandCode;
             }
         }
     }

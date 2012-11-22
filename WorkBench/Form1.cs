@@ -32,7 +32,7 @@ namespace WorkBench
             serialPort = new ArduinoSerialPort("COM5", 115200);
             serialPort.Open();
 
-            pinMapping = new PinMapping(13);
+            pinMapping = new PinMapping(8);
             serialPort.ComponentMappings.Add(pinMapping);
             pinMapping.FeedbackEvent += new SkynetUtilities.FeedbackRecievedEventHandler(ResponsePackageRecieved);
             
