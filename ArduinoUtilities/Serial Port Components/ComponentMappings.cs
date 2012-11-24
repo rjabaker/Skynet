@@ -17,14 +17,14 @@ namespace ArduinoUtilities
         #region Private Variables
 
         private List<IComponentMapping> componentMappings;
-        private SerialPortUtilities.SetPinEventHandler setPinEventHandler;
+        private ArduinoPinUtilities.SetPinEventHandler setPinEventHandler;
         private SerialPortUtilities.ToggleListeningForResponsePackageEventHandler toggleListeningForResponsePackageEventHandler;
 
         #endregion
 
         #region Constructors
 
-        public ComponentMappings(SerialPortUtilities.SetPinEventHandler setPinEventHandler, SerialPortUtilities.ToggleListeningForResponsePackageEventHandler toggleListeningForResponsePackageEventHandler)
+        public ComponentMappings(ArduinoPinUtilities.SetPinEventHandler setPinEventHandler, SerialPortUtilities.ToggleListeningForResponsePackageEventHandler toggleListeningForResponsePackageEventHandler)
         {
             this.componentMappings = new List<IComponentMapping>();
             this.setPinEventHandler = setPinEventHandler;
@@ -47,7 +47,7 @@ namespace ArduinoUtilities
             }
         }
 
-        public SerialPortUtilities.SetPinEventHandler SetPinEventHandler
+        public ArduinoPinUtilities.SetPinEventHandler SetPinEventHandler
         {
             get
             {

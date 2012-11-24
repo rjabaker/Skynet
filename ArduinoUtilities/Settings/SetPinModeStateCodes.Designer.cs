@@ -13,11 +13,11 @@ namespace ArduinoUtilities.Settings {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "10.0.0.0")]
-    internal sealed partial class CommandCodes : global::System.Configuration.ApplicationSettingsBase {
+    internal sealed partial class SetPinModeStateCodes : global::System.Configuration.ApplicationSettingsBase {
         
-        private static CommandCodes defaultInstance = ((CommandCodes)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new CommandCodes())));
+        private static SetPinModeStateCodes defaultInstance = ((SetPinModeStateCodes)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new SetPinModeStateCodes())));
         
-        public static CommandCodes Default {
+        public static SetPinModeStateCodes Default {
             get {
                 return defaultInstance;
             }
@@ -26,36 +26,27 @@ namespace ArduinoUtilities.Settings {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int DigitalPinWriteCommandCode {
+        public int OutputStateCode {
             get {
-                return ((int)(this["DigitalPinWriteCommandCode"]));
+                return ((int)(this["OutputStateCode"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        public int SettingCommandCode {
+        public int InputStateCode {
             get {
-                return ((int)(this["SettingCommandCode"]));
+                return ((int)(this["InputStateCode"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("3")]
-        public int AnalogPinWriteCommandCode {
+        public int InputPullupStateCode {
             get {
-                return ((int)(this["AnalogPinWriteCommandCode"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4")]
-        public int SetPinModeCommandCode {
-            get {
-                return ((int)(this["SetPinModeCommandCode"]));
+                return ((int)(this["InputPullupStateCode"]));
             }
         }
     }

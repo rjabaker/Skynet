@@ -15,7 +15,7 @@ namespace ArduinoUtilities
             }
         }
 
-        public static int SettingCommand
+        public static int SettingCommandCode
         {
             get
             {
@@ -28,6 +28,14 @@ namespace ArduinoUtilities
             get
             {
                 return Settings.CommandCodes.Default.AnalogPinWriteCommandCode;
+            }
+        }
+
+        public static int SetPinModeCommandCode
+        {
+            get
+            {
+                return Settings.CommandCodes.Default.SetPinModeCommandCode;
             }
         }
     }

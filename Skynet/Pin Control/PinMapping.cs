@@ -22,7 +22,7 @@ namespace Skynet
 
         private bool listeningForResponsePackage;
 
-        private SerialPortUtilities.SetPinEventHandler setPinEventHandler;
+        private ArduinoPinUtilities.SetPinEventHandler setPinEventHandler;
         private SerialPortUtilities.ResponsePackageRecievedEventHandler responsePackageRecievedEventHandler;
         private SerialPortUtilities.ToggleListeningForResponsePackageEventHandler toggleListeningForResponePackageEventHandler;
 
@@ -85,7 +85,7 @@ namespace Skynet
             }
         }
 
-        public SerialPortUtilities.SetPinEventHandler SetPinEventHandler
+        public ArduinoPinUtilities.SetPinEventHandler SetPinEventHandler
         {
             get
             {
@@ -135,10 +135,37 @@ namespace Skynet
 
         public void SetPin(int intensity)
         {
-            // Build a analog command package. Listen for a response package. Set the pin.
+            // Build an analog command package. Listen for a response package. Set the pin.
             byte[] commandPackage = AnalogWriteCommandPackageCode(intensity);
             toggleListeningForResponePackageEventHandler((IComponentMapping)this, true);
             SetPinEventHandler(commandPackage);
+        }
+
+        public void SetPinMode(int pinMode)
+        {
+            byte[] commandPackage = SetPinModeCommandPackageCode(pinMode);
+            toggleListeningForResponePackageEventHandler((IComponentMapping)this, true);
+            SetPinEventHandler(commandPackage);
+        }
+
+        public byte[] GetCommandPackageCode(int state)
+        {
+            byte commandID = (byte)CommandCodes.SetPinModeCommandCode;
+            byte pinID = (byte)pinNumber;
+            byte stateID = (byte)state;
+
+            byte[] commandPackage = new byte[] { commandID, pinID, stateID };
+            return commandPackage;
+        }
+
+        public byte[] GetCommandPackageCode(bool state)
+        {
+            byte commandID = (byte)CommandCodes.SetPinModeCommandCode;
+            byte pinID = (byte)pinNumber;
+            byte stateID = (byte)(state ? 1 : 0);
+
+            byte[] commandPackage = new byte[] { commandID, pinID, stateID };
+            return commandPackage;
         }
 
         public byte[] AnalogWriteCommandPackageCode(int intensity)
@@ -161,19 +188,29 @@ namespace Skynet
             return commandPackage;
         }
 
+        public byte[] SetPinModeCommandPackageCode(int pinMode)
+        {
+            byte commandID = (byte)CommandCodes.SetPinModeCommandCode;
+            byte pinID = (byte)pinNumber;
+            byte stateID = (byte)pinMode;
+
+            byte[] commandPackage = new byte[] { commandID, pinID, stateID };
+            return commandPackage;
+        }
+
         #endregion
 
         #region Event Handlers
 
         public void ResponsePackageRecieved(byte responsePackage)
         {
-            bool belongsToPin = SerialPortUtilities.ResponsePackageBelongsToPin(pinNumber, responsePackage);
+            bool belongsToPin = ArduinoPinUtilities.ResponsePackageBelongsToPin(pinNumber, responsePackage);
 
             if (belongsToPin)
             {
                 // Stop listening for a response package. Read the pin state and send it out to the listeners.
                 toggleListeningForResponePackageEventHandler((IComponentMapping)this, false);
-                int state = SerialPortUtilities.ReadPinState(responsePackage);
+                int state = ArduinoPinUtilities.ReadPinState(responsePackage);
                 PinFeedback feedback = new PinFeedback(pinNumber, state);
                 if (FeedbackEvent != null) FeedbackEvent(feedback);
             }

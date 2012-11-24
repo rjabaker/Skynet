@@ -22,6 +22,7 @@ namespace WorkBench
         private delegate void SetDisplayOnEventHandler(int timesOn);
 
         private PinMapping pinMapping;
+        private PinMapping analogPinMapping;
 
         public Form1()
         {
@@ -32,8 +33,12 @@ namespace WorkBench
             serialPort = new ArduinoSerialPort("COM5", 115200);
             serialPort.Open();
 
-            pinMapping = new PinMapping(8);
+            analogPinMapping = new PinMapping(11);
+            pinMapping = new PinMapping(13);
+            serialPort.ComponentMappings.Add(analogPinMapping);
             serialPort.ComponentMappings.Add(pinMapping);
+            analogPinMapping.SetPinMode(SetPinModeStateCodes.OutputStateCode);
+            pinMapping.SetPinMode(SetPinModeStateCodes.OutputStateCode);
             pinMapping.FeedbackEvent += new SkynetUtilities.FeedbackRecievedEventHandler(ResponsePackageRecieved);
             
             this.replyPackageTextBox.Text = "0";
@@ -74,6 +79,11 @@ namespace WorkBench
             }
 
             ToggleLED(ledON);
+        }
+
+        private void analogGoButton_Click(object sender, EventArgs e)
+        {
+            analogPinMapping.SetPin(Convert.ToInt32(analogIntensityTextBox.Text));
         }
     }
 }

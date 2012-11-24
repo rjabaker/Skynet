@@ -13,7 +13,7 @@ namespace ArduinoUtilities
         string Description { get; set; }
         bool ListeningForResponsePackage { get; set; }
 
-        SerialPortUtilities.SetPinEventHandler SetPinEventHandler { get; set; }
+        ArduinoPinUtilities.SetPinEventHandler SetPinEventHandler { get; set; }
         SerialPortUtilities.ResponsePackageRecievedEventHandler ResponsePackageRecievedEventHandler { get; set; }
         SerialPortUtilities.ToggleListeningForResponsePackageEventHandler ToggleListeningForResponsePackageEventHandler { get; set; }
 
@@ -23,6 +23,7 @@ namespace ArduinoUtilities
 
         byte[] DigitalWriteCommandPackageCode(bool turnOn);
         byte[] AnalogWriteCommandPackageCode(int intensity);
+        byte[] SetPinModeCommandPackageCode(int pinMode);
 
         #endregion
     }

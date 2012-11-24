@@ -11,5 +11,8 @@
     <Setting Name="AnalogPinWriteCommandCode" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">3</Value>
     </Setting>
+    <Setting Name="SetPinModeCommandCode" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
