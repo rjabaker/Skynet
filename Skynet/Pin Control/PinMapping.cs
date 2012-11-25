@@ -148,26 +148,6 @@ namespace Skynet
             SetPinEventHandler(commandPackage);
         }
 
-        public byte[] GetCommandPackageCode(int state)
-        {
-            byte commandID = (byte)CommandCodes.SetPinModeCommandCode;
-            byte pinID = (byte)pinNumber;
-            byte stateID = (byte)state;
-
-            byte[] commandPackage = new byte[] { commandID, pinID, stateID };
-            return commandPackage;
-        }
-
-        public byte[] GetCommandPackageCode(bool state)
-        {
-            byte commandID = (byte)CommandCodes.SetPinModeCommandCode;
-            byte pinID = (byte)pinNumber;
-            byte stateID = (byte)(state ? 1 : 0);
-
-            byte[] commandPackage = new byte[] { commandID, pinID, stateID };
-            return commandPackage;
-        }
-
         public byte[] AnalogWriteCommandPackageCode(int intensity)
         {
             byte commandID = (byte)CommandCodes.AnalogPinWriteCommandCode;
