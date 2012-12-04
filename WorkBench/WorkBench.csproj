@@ -53,10 +53,19 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="KinectTester.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KinectTester.Designer.cs">
+      <DependentUpon>KinectTester.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KinectTester.resx">
+      <DependentUpon>KinectTester.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -81,6 +90,10 @@
     <ProjectReference Include="..\ArduinoUtilities\ArduinoUtilities.csproj">
       <Project>{63739152-BAFA-4953-A685-BFE12886635F}</Project>
       <Name>ArduinoUtilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KinectUtilities\KinectUtilities.csproj">
+      <Project>{60131C3A-CE73-4C80-8E68-1773BB5BD4C3}</Project>
+      <Name>KinectUtilities</Name>
     </ProjectReference>
     <ProjectReference Include="..\Skynet\Skynet.csproj">
       <Project>{4D05196C-8A32-4EF7-A4CD-94F624D243CE}</Project>

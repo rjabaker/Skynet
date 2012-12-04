@@ -11,37 +11,65 @@ using System.Threading;
 
 using ArduinoUtilities;
 using Skynet;
+using KinectUtilities;
 
 namespace WorkBench
 {
     public partial class Form1 : Form
     {
+        #region Arduino Variables
+
         private bool ledON;
+        private bool stopped;
 
         private ArduinoSerialPort serialPort;
         private delegate void SetDisplayOnEventHandler(int timesOn);
 
         private PinMapping pinMapping;
-        private PinMapping analogPinMapping;
+        private PinMapping cwAnalogPinMapping;
+        private PinMapping ccwAnalogPinMapping;
+        private PinMapping eStop;
+
+        #endregion
+
+        #region Constructors
 
         public Form1()
         {
             InitializeComponent();
+            ArduinoSetup();
+        }
+
+        #endregion
+
+        #region Arduino Methods
+
+        private void ArduinoSetup()
+        {
             ledON = false;
             toggleLED.BackColor = Color.Red;
 
             serialPort = new ArduinoSerialPort("COM5", 115200);
             serialPort.Open();
 
-            analogPinMapping = new PinMapping(11);
+            cwAnalogPinMapping = new PinMapping(11);
+            ccwAnalogPinMapping = new PinMapping(10);
             pinMapping = new PinMapping(13);
-            serialPort.ComponentMappings.Add(analogPinMapping);
+            eStop = new PinMapping(8);
+            serialPort.ComponentMappings.Add(cwAnalogPinMapping);
+            serialPort.ComponentMappings.Add(ccwAnalogPinMapping);
             serialPort.ComponentMappings.Add(pinMapping);
-            analogPinMapping.SetPinMode(SetPinModeStateCodes.OutputStateCode);
+            serialPort.ComponentMappings.Add(eStop);
+            cwAnalogPinMapping.SetPinMode(SetPinModeStateCodes.OutputStateCode);
+            cwAnalogPinMapping.SetPinMode(SetPinModeStateCodes.OutputStateCode);
             pinMapping.SetPinMode(SetPinModeStateCodes.OutputStateCode);
+            eStop.SetPinMode(SetPinModeStateCodes.OutputStateCode);
             pinMapping.FeedbackEvent += new SkynetUtilities.FeedbackRecievedEventHandler(ResponsePackageRecieved);
-            
+
             this.replyPackageTextBox.Text = "0";
+
+            eStop.SetPin(true);
+            stopped = false;
         }
 
         private void ToggleLED(bool on)
@@ -83,7 +111,30 @@ namespace WorkBench
 
         private void analogGoButton_Click(object sender, EventArgs e)
         {
-            analogPinMapping.SetPin(Convert.ToInt32(analogIntensityTextBox.Text));
+            cwAnalogPinMapping.SetPin(Convert.ToInt32(cwAnalogIntensityTextBox.Text));
+            ccwAnalogPinMapping.SetPin(Convert.ToInt32(ccwAnalogIntensityTextBox.Text));
         }
+
+        private void ccwAnalogIntensityTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            stopped = !stopped;
+            eStop.SetPin(!stopped);
+
+            if (stopped)
+            {
+                button1.BackColor = Color.Red;
+            }
+            else
+            {
+                button1.BackColor = Color.Green;
+            }
+        }
+
+        #endregion
     }
 }
