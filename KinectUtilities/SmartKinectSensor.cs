@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
 using Microsoft.Kinect;
+
+using KinectUtilities.Gestures;
 
 namespace KinectUtilities
 {
@@ -142,9 +143,14 @@ namespace KinectUtilities
                     skeletonRecognizer.TrackedSkeletons[skeleton.TrackingId] = skeleton;
                     if (skeletonRenderedEventHandler != null)
                     {
-                        // Bitmap bitmap = SkeletonRederer.RenderSkeleton(imageFrame, skeleton);
                         bitmap = bitmap == null ? SkeletonRederer.RenderSkeleton(skeleton) : SkeletonRederer.RenderSkeleton(bitmap, skeleton);
                     }
+
+                    GestureTree tree = new GestureTree();
+                    tree.CaptureGesture(skeleton);
+                    KinectSerializer.SerializeToXml<GestureTree>(tree, "C:\\Users\\Robert\\Documents\\GitHub\\docs\\design\\The Eye\\Phase 1\\Files\\Gesture Bin\\skeleton_id_" + skeleton.TrackingId.ToString() + ".xml");
+                    tree = KinectSerializer.DeserializeFromXml<GestureTree>("C:\\Users\\Robert\\Documents\\GitHub\\docs\\design\\The Eye\\Phase 1\\Files\\Gesture Bin\\skeleton_id_" + skeleton.TrackingId.ToString() + ".xml");
+                    KinectSerializer.SerializeToXml<GestureTree>(tree, "C:\\Users\\Robert\\Documents\\GitHub\\docs\\design\\The Eye\\Phase 1\\Files\\Gesture Bin\\skeleton_id_" + skeleton.TrackingId.ToString() + "_2.xml");
                 }
             }
 
