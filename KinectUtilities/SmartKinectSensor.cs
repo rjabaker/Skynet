@@ -16,7 +16,8 @@ namespace KinectUtilities
     {
         #region Event Handlers
 
-        private SkeletonRederer.SkeletonRenderedEventHandler skeletonRenderedEventHandler;
+        private SkeletonRenderer.SkeletonRenderedEventHandler skeletonRenderedEventHandler;
+        private SkeletonRenderer.TestCaptured testCapturedEventHandler;
 
         #endregion
 
@@ -59,7 +60,7 @@ namespace KinectUtilities
             }
         }
 
-        public SkeletonRederer.SkeletonRenderedEventHandler SkeletonRenderedEventHandler
+        public SkeletonRenderer.SkeletonRenderedEventHandler SkeletonRenderedEventHandler
         {
             get
             {
@@ -68,6 +69,17 @@ namespace KinectUtilities
             set
             {
                 skeletonRenderedEventHandler = value;
+            }
+        }
+        public SkeletonRenderer.TestCaptured TestCapturedEventHandler
+        {
+            get
+            {
+                return testCapturedEventHandler;
+            }
+            set
+            {
+                testCapturedEventHandler = value;
             }
         }
 
@@ -100,8 +112,8 @@ namespace KinectUtilities
         }
         private void EnableSkeletonRendering()
         {
-            SkeletonRederer.Sensor = this.sensor;
-            SkeletonRederer.CreateDefaultBitmap(new Size(sensor.ColorStream.FrameWidth, sensor.ColorStream.FrameHeight), Color.Black);
+            SkeletonRenderer.Sensor = this.sensor;
+            SkeletonRenderer.CreateDefaultBitmap(new Size(sensor.ColorStream.FrameWidth, sensor.ColorStream.FrameHeight), Color.Black);
 
             sensor.SkeletonStream.Enable();
             sensor.SkeletonStream.AppChoosesSkeletons = true;
@@ -109,8 +121,8 @@ namespace KinectUtilities
         }
         private void EnableFullImageSkeletonRendering()
         {
-            SkeletonRederer.Sensor = this.sensor;
-            SkeletonRederer.CreateDefaultBitmap(new Size(sensor.ColorStream.FrameWidth, sensor.ColorStream.FrameHeight), Color.Black);
+            SkeletonRenderer.Sensor = this.sensor;
+            SkeletonRenderer.CreateDefaultBitmap(new Size(sensor.ColorStream.FrameWidth, sensor.ColorStream.FrameHeight), Color.Black);
 
             sensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
             sensor.DepthStream.Enable(DepthImageFormat.Resolution320x240Fps30);
@@ -143,14 +155,21 @@ namespace KinectUtilities
                     skeletonRecognizer.TrackedSkeletons[skeleton.TrackingId] = skeleton;
                     if (skeletonRenderedEventHandler != null)
                     {
-                        bitmap = bitmap == null ? SkeletonRederer.RenderSkeleton(skeleton) : SkeletonRederer.RenderSkeleton(bitmap, skeleton);
+                        bitmap = bitmap == null ? SkeletonRenderer.RenderSkeleton(skeleton) : SkeletonRenderer.RenderSkeleton(bitmap, skeleton);
                     }
 
-                    GestureTree tree = new GestureTree();
-                    tree.CaptureGesture(skeleton);
-                    KinectSerializer.SerializeToXml<GestureTree>(tree, "C:\\Users\\Robert\\Documents\\GitHub\\docs\\design\\The Eye\\Phase 1\\Files\\Gesture Bin\\skeleton_id_" + skeleton.TrackingId.ToString() + ".xml");
-                    tree = KinectSerializer.DeserializeFromXml<GestureTree>("C:\\Users\\Robert\\Documents\\GitHub\\docs\\design\\The Eye\\Phase 1\\Files\\Gesture Bin\\skeleton_id_" + skeleton.TrackingId.ToString() + ".xml");
-                    KinectSerializer.SerializeToXml<GestureTree>(tree, "C:\\Users\\Robert\\Documents\\GitHub\\docs\\design\\The Eye\\Phase 1\\Files\\Gesture Bin\\skeleton_id_" + skeleton.TrackingId.ToString() + "_2.xml");
+                    //GestureTree tree = new GestureTree();
+                    //tree.CaptureGesture(skeleton);
+                    //KinectSerializer.SerializeToXml<GestureTree>(tree, "C:\\Users\\Robert\\Documents\\GitHub\\docs\\design\\The Eye\\Phase 1\\Files\\Gesture Bin\\flex.xml");
+                    GestureTree tree = KinectSerializer.DeserializeFromXml<GestureTree>("C:\\Users\\Robert\\Documents\\GitHub\\docs\\design\\The Eye\\Phase 1\\Files\\Gesture Bin\\flex.xml");
+                    List<Joint> joints = new List<Joint>();
+                    joints.Add(skeleton.Joints[JointType.ShoulderRight]);
+                    joints.Add(skeleton.Joints[JointType.ElbowRight]);
+                    joints.Add(skeleton.Joints[JointType.WristRight]);
+                    joints.Add(skeleton.Joints[JointType.HandRight]);
+                    bool captured = tree.DoesSkeletonContainGesture(joints);
+                    if (captured) SkeletonRenderer.RenderSkeleton(bitmap, skeleton, Pens.SeaGreen);
+                    TestCapturedEventHandler(captured);
                 }
             }
 
@@ -178,7 +197,7 @@ namespace KinectUtilities
                     skeletonRecognizer.TrackedSkeletons[skeleton.TrackingId] = skeleton;
                     if (skeletonRenderedEventHandler != null)
                     {
-                        Bitmap bitmap = SkeletonRederer.RenderSkeleton(imageFrame, skeleton);
+                        Bitmap bitmap = SkeletonRenderer.RenderSkeleton(imageFrame, skeleton);
                         skeletonRenderedEventHandler(bitmap);
                     }
                 }

@@ -45,10 +45,11 @@ namespace KinectUtilities.Gestures
 
         #region Public Methods
 
-        public bool GestureCaptured(List<Joint> skeletonJoints)
+        public bool DoesSkeletonContainGesture(List<Joint> skeletonJoints)
         {
             // Returns true if the list of joints matches the gesture tree.
-            return connectedJoints.Count != 0 && DoesParentSatisfyRules(connectedJoints.First(), skeletonJoints);
+            List<Joint> cloneList = skeletonJoints.ToList<Joint>();
+            return connectedJoints.Count != 0 && DoesParentSatisfyRules(connectedJoints.First(), cloneList);
         }
         public void CaptureGesture(Skeleton skeleton)
         {
@@ -91,13 +92,13 @@ namespace KinectUtilities.Gestures
 
             // Extract this joint. If it's null, the gesture will not be found; return false. Remove
             // this joint from the collection, since it's a parent and will no longer be traversed.
-            thisJoint = skeletonJoints.First(joint => joint.JointType == connectedJoint.JointType);
+            thisJoint = skeletonJoints.Find(joint => joint.JointType == connectedJoint.JointType);
             if (thisJoint == null) return false;
             skeletonJoints.RemoveAll(joint => joint.JointType == connectedJoint.JointType);
 
             foreach (Joint joint in skeletonJoints)
             {
-                child = (ConnectedJoint)connectedJoints.Select(cj => cj.JointType == joint.JointType);
+                child = connectedJoints.Find(cj => cj.JointType == joint.JointType);
                 satisfyRules &= child != null && connectedJoint.DoesChildMeetGestureRules(child.ID, thisJoint, joint);
                 if (!satisfyRules) break;
             }

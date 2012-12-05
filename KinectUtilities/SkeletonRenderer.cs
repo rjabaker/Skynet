@@ -10,11 +10,12 @@ using Microsoft.Kinect;
 
 namespace KinectUtilities
 {
-    public static class SkeletonRederer
+    public static class SkeletonRenderer
     {
         #region Delegates
 
         public delegate void SkeletonRenderedEventHandler(Bitmap image);
+        public delegate void TestCaptured(bool captured);
 
         #endregion
 
@@ -55,6 +56,14 @@ namespace KinectUtilities
         {
             Graphics graphics = Graphics.FromImage(bitmap);
             DrawSkeleton(skeleton, graphics);
+
+            return bitmap;
+        }
+
+        public static Bitmap RenderSkeleton(Bitmap bitmap, Skeleton skeleton, Pen pen)
+        {
+            Graphics graphics = Graphics.FromImage(bitmap);
+            DrawSkeleton(skeleton, graphics, pen);
 
             return bitmap;
         }
@@ -100,12 +109,44 @@ namespace KinectUtilities
             DrawBone(JointType.WristRight, JointType.HandRight, skeleton, graphics);
         }
 
-        public static void DrawBone(JointType jointTypeA, JointType jointTypeB, Skeleton skeleton, Graphics graphics)
+        public static void DrawSkeleton(Skeleton skeleton, Graphics graphics, Pen pen)
         {
-            DrawBone(jointTypeA, jointTypeB, skeleton, Pens.Red, graphics);
+            // Head, shoulders, spine.
+            DrawBone(JointType.Head, JointType.ShoulderCenter, skeleton, graphics, pen);
+            DrawBone(JointType.ShoulderCenter, JointType.Spine, skeleton, graphics, pen);
+            DrawBone(JointType.Spine, JointType.HipCenter, skeleton, graphics, pen);
+
+            // Left leg.
+            DrawBone(JointType.HipCenter, JointType.HipLeft, skeleton, graphics, pen);
+            DrawBone(JointType.HipLeft, JointType.KneeLeft, skeleton, graphics, pen);
+            DrawBone(JointType.KneeLeft, JointType.AnkleLeft, skeleton, graphics, pen);
+            DrawBone(JointType.AnkleLeft, JointType.FootLeft, skeleton, graphics, pen);
+
+            // Right Leg.
+            DrawBone(JointType.HipCenter, JointType.HipRight, skeleton, graphics, pen);
+            DrawBone(JointType.HipRight, JointType.KneeRight, skeleton, graphics, pen);
+            DrawBone(JointType.KneeRight, JointType.AnkleRight, skeleton, graphics, pen);
+            DrawBone(JointType.AnkleRight, JointType.FootRight, skeleton, graphics, pen);
+
+            // Left arm.
+            DrawBone(JointType.ShoulderCenter, JointType.ShoulderLeft, skeleton, graphics, pen);
+            DrawBone(JointType.ShoulderLeft, JointType.ElbowLeft, skeleton, graphics, pen);
+            DrawBone(JointType.ElbowLeft, JointType.WristLeft, skeleton, graphics, pen);
+            DrawBone(JointType.WristLeft, JointType.HandLeft, skeleton, graphics, pen);
+
+            // Right arm.
+            DrawBone(JointType.ShoulderCenter, JointType.ShoulderRight, skeleton, graphics, pen);
+            DrawBone(JointType.ShoulderRight, JointType.ElbowRight, skeleton, graphics, pen);
+            DrawBone(JointType.ElbowRight, JointType.WristRight, skeleton, graphics, pen);
+            DrawBone(JointType.WristRight, JointType.HandRight, skeleton, graphics, pen);
         }
 
-        public static void DrawBone(JointType jointTypeA, JointType jointTypeB, Skeleton skeleton, Pen pen, Graphics graphics)
+        public static void DrawBone(JointType jointTypeA, JointType jointTypeB, Skeleton skeleton, Graphics graphics)
+        {
+            DrawBone(jointTypeA, jointTypeB, skeleton, graphics, Pens.Red);
+        }
+
+        public static void DrawBone(JointType jointTypeA, JointType jointTypeB, Skeleton skeleton, Graphics graphics, Pen pen)
         {
             Point pointA = GetJoint(jointTypeA, skeleton);
             Point pointB = GetJoint(jointTypeB, skeleton);
