@@ -35,6 +35,7 @@ namespace WorkBench
 
             capturedLabel.Visible = false;
             sensor.SkeletonController.SkeletonCapturingFunctions.Add(SkeletonCapturingFunction.GestureCapturing);
+            sensor.SkeletonController.SkeletonCapturingFunctions.Add(SkeletonCapturingFunction.RenderCanvasActive);
 
             // InitializeArduino();
         }

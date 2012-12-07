@@ -12,7 +12,7 @@ namespace KinectUtilities
 {
     public class SkeletonRenderer
     {
-        #region Public Static Variables
+        #region Private Variables
 
         private KinectSensor sensor;
 
@@ -113,7 +113,6 @@ namespace KinectUtilities
             DrawBone(JointType.ElbowRight, JointType.WristRight, skeleton, graphics);
             DrawBone(JointType.WristRight, JointType.HandRight, skeleton, graphics);
         }
-
         private void DrawSkeleton(Skeleton skeleton, Graphics graphics, Pen pen)
         {
             // Head, shoulders, spine.
@@ -145,12 +144,10 @@ namespace KinectUtilities
             DrawBone(JointType.ElbowRight, JointType.WristRight, skeleton, graphics, pen);
             DrawBone(JointType.WristRight, JointType.HandRight, skeleton, graphics, pen);
         }
-
         private void DrawBone(JointType jointTypeA, JointType jointTypeB, Skeleton skeleton, Graphics graphics)
         {
             DrawBone(jointTypeA, jointTypeB, skeleton, graphics, Pens.Red);
         }
-
         private void DrawBone(JointType jointTypeA, JointType jointTypeB, Skeleton skeleton, Graphics graphics, Pen pen)
         {
             Point pointA = GetJoint(jointTypeA, skeleton);
@@ -161,14 +158,12 @@ namespace KinectUtilities
                 graphics.DrawLine(pen, pointA, pointB);
             }
         }
-
         private Point GetJoint(JointType jointType, Skeleton skeleton)
         {
             SkeletonPoint skeletonPoint = skeleton.Joints[jointType].Position;
             ColorImagePoint colorImagePoint = sensor.CoordinateMapper.MapSkeletonPointToColorPoint(skeletonPoint, ColorImageFormat.RgbResolution640x480Fps30);
             return new Point(colorImagePoint.X, colorImagePoint.Y);
         }
-
         private Bitmap ImageToBitmap(ColorImageFrame image)
         {
             byte[] pixeldata = new byte[image.PixelDataLength];

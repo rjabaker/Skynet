@@ -26,6 +26,7 @@ namespace KinectUtilities
         private KinectSensor sensor;
         private SkeletonRenderer skeletonRenderer;
         private SkeletonRecognizer skeletonRecognizer;
+        private RenderCanvas renderCanvas;
 
         private List<SkeletonCapturingFunction> capturingFunctions;
         private int numberOfSkeletonsToRecognize;
@@ -41,6 +42,7 @@ namespace KinectUtilities
             this.sensor = sensor;
             this.skeletonRenderer = new SkeletonRenderer(this.sensor);
             this.skeletonRecognizer = new SkeletonRecognizer();
+            this.renderCanvas = new RenderCanvas(TimeSpan.FromSeconds(5));
 
             this.capturingFunctions = new List<SkeletonCapturingFunction>();
             this.numberOfSkeletonsToRecognize = 1;
@@ -72,6 +74,18 @@ namespace KinectUtilities
             set
             {
                 gestureCapturedEventHandler = value;
+            }
+        }
+
+        public RenderCanvas RenderCanvas
+        {
+            get
+            {
+                return renderCanvas;
+            }
+            set
+            {
+                renderCanvas = value;
             }
         }
 
@@ -113,19 +127,23 @@ namespace KinectUtilities
 
         #region Public Methods
 
-        public void CaptureSkeletonData(Skeleton[] skeletonData)
+        public void CaptureSkeletonData(Skeleton[] skeletonData, DateTime timeStamp)
         {
             List<Skeleton> skeletons = RecognizeSkeletons(skeletonData);
+            Bitmap renderImage = null;
 
-            if (capturingFunctions.Contains(SkeletonCapturingFunction.SkeletonRendering)) RenderSkeletons(skeletons);
+            if (capturingFunctions.Contains(SkeletonCapturingFunction.SkeletonRendering)) RenderSkeletons(skeletons, out renderImage);
             if (capturingFunctions.Contains(SkeletonCapturingFunction.GestureCapturing)) CaptureGestures(skeletons);
+            if (capturingFunctions.Contains(SkeletonCapturingFunction.RenderCanvasActive)) UpdateRenderCanvas(skeletons, timeStamp, renderImage);
         }
-        public void CaptureSkeletonData(Skeleton[] skeletonData, ColorImageFrame imageFrame)
+        public void CaptureSkeletonData(Skeleton[] skeletonData, ColorImageFrame imageFrame, DateTime timeStamp)
         {
             List<Skeleton> skeletons = RecognizeSkeletons(skeletonData);
+            Bitmap renderImage = null;
 
-            if (capturingFunctions.Contains(SkeletonCapturingFunction.SkeletonRendering)) RenderSkeletons(skeletons, imageFrame);
+            if (capturingFunctions.Contains(SkeletonCapturingFunction.SkeletonRendering)) RenderSkeletons(skeletons, imageFrame, out renderImage);
             if (capturingFunctions.Contains(SkeletonCapturingFunction.GestureCapturing)) CaptureGestures(skeletons);
+            if (capturingFunctions.Contains(SkeletonCapturingFunction.RenderCanvasActive)) UpdateRenderCanvas(skeletons, timeStamp, renderImage);
         }
         private List<Skeleton> RecognizeSkeletons(Skeleton[] skeletonData)
         {
@@ -156,9 +174,9 @@ namespace KinectUtilities
             return recognizedSkeletons;
         }
 
-        private void RenderSkeletons(List<Skeleton> skeletons)
+        private void RenderSkeletons(List<Skeleton> skeletons, out Bitmap bitmap)
         {
-            Bitmap bitmap = (Bitmap)defaultBitmap.Clone();
+            bitmap = (Bitmap)defaultBitmap.Clone();
 
             foreach (Skeleton skeleton in skeletons)
             {
@@ -167,9 +185,9 @@ namespace KinectUtilities
 
             if (skeletonRenderedEventHandler != null) skeletonRenderedEventHandler(bitmap);
         }
-        private void RenderSkeletons(List<Skeleton> skeletons, ColorImageFrame imageFrame)
+        private void RenderSkeletons(List<Skeleton> skeletons, ColorImageFrame imageFrame, out Bitmap bitmap)
         {
-            Bitmap bitmap = null;
+            bitmap = null;
 
             foreach (Skeleton skeleton in skeletons)
             {
@@ -205,6 +223,18 @@ namespace KinectUtilities
             //bool gestureCaptured = tree.DoesSkeletonContainGesture(list);
 
             //if(gestureCaptured) gestureCapturedEventHandler(null);
+        }
+
+        private void UpdateRenderCanvas(List<Skeleton> skeletons, DateTime timeStamp, Bitmap renderImage)
+        {
+            if (renderImage == null)
+            {
+                renderCanvas.SkeletonFrameCaptured(skeletons, timeStamp);
+            }
+            else
+            {
+                renderCanvas.SkeletonFrameCaptured(skeletons, timeStamp, renderImage);
+            }
         }
 
         #endregion

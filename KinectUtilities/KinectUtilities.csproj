@@ -49,9 +49,13 @@
     <Compile Include="Gesture Recognition\GestureTree.cs" />
     <Compile Include="Gesture Recognition\IGesture.cs" />
     <Compile Include="Gesture Recognition\IGestureRule.cs" />
+    <Compile Include="Interfacing\RenderCanvas.cs" />
     <Compile Include="Kinect Sensor\SensorMode.cs" />
     <Compile Include="Skeleton\SkeletonCapturingFunction.cs" />
     <Compile Include="Skeleton\SkeletonController.cs" />
+    <Compile Include="Skeleton\SkeletonRenderFrame.cs" />
+    <Compile Include="Skeleton\SkeletonRenderFrames.cs" />
+    <Compile Include="Utilities\DateTimeUtilities.cs" />
     <Compile Include="Utilities\ImageUtilities.cs" />
     <Compile Include="Utilities\KinectEventUtilities.cs" />
     <Compile Include="Utilities\KinectSerializer.cs" />
