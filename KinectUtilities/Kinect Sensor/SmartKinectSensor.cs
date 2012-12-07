@@ -127,13 +127,13 @@ namespace KinectUtilities
         private void sensor_AllFramesReadyForFullImageSkeletonRendering(object sender, AllFramesReadyEventArgs e)
         {
             if (sensorMode != SensorMode.FullImageSkeletonRendering) return;
-            
+
             ColorImageFrame imageFrame = e.OpenColorImageFrame();
             SkeletonFrame skeletonFrame = e.OpenSkeletonFrame();
             if (imageFrame != null && skeletonFrame != null)
             {
                 skeletonFrame.CopySkeletonDataTo(skeletonData);
-                skeletonController.CaptureSkeletonData(skeletonData, imageFrame, DateTimeUtilities.ToDateTime(skeletonFrame.Timestamp));
+                skeletonController.CaptureSkeletonData(skeletonData, imageFrame);
             }
 
         }
@@ -145,7 +145,7 @@ namespace KinectUtilities
             if (skeletonFrame != null)
             {
                 skeletonFrame.CopySkeletonDataTo(skeletonData);
-                skeletonController.CaptureSkeletonData(skeletonData, DateTimeUtilities.ToDateTime(skeletonFrame.Timestamp));
+                skeletonController.CaptureSkeletonData(skeletonData);
             }
         }
 
