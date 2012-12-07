@@ -10,40 +10,58 @@ using Microsoft.Kinect;
 
 namespace KinectUtilities
 {
-    public static class SkeletonRenderer
+    public class SkeletonRenderer
     {
-        #region Delegates
-
-        public delegate void SkeletonRenderedEventHandler(Bitmap image);
-        public delegate void TestCaptured(bool captured);
-
-        #endregion
-
         #region Public Static Variables
 
-        public static KinectSensor Sensor;
-        public static Bitmap defaultBitamp = CreateDefaultBitmap(new Size(100, 100), Color.Black);
+        private KinectSensor sensor;
 
         #endregion
 
-        #region Public Static Methods
+        #region Constructors
 
-        public static Bitmap CreateDefaultBitmap(Size size, Color color)
+        public SkeletonRenderer(KinectSensor sensor)
         {
-            defaultBitamp = new Bitmap(size.Width, size.Height);
-
-            for (int row = 0; row < size.Width; row++)
-            {
-                for (int column = 0; column < size.Height; column++)
-                {
-                    defaultBitamp.SetPixel(row, column, color);
-                }
-            }
-
-            return defaultBitamp;
+            this.sensor = sensor;
         }
 
-        public static Bitmap RenderSkeleton(ColorImageFrame image, Skeleton skeleton)
+        #endregion
+
+        #region Properties
+
+        public KinectSensor Sensor
+        {
+            get
+            {
+                return sensor;
+            }
+            set
+            {
+                sensor = value;
+            }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        public Bitmap RenderSkeleton(Bitmap bitmap, Skeleton skeleton)
+        {
+            Bitmap bitmapClone = (Bitmap)bitmap.Clone();
+            Graphics graphics = Graphics.FromImage(bitmapClone);
+            DrawSkeleton(skeleton, graphics);
+
+            return bitmapClone;
+        }
+        public Bitmap RenderSkeleton(Bitmap bitmap, Skeleton skeleton, Pen pen)
+        {
+            Bitmap bitmapClone = (Bitmap)bitmap.Clone();
+            Graphics graphics = Graphics.FromImage(bitmapClone);
+            DrawSkeleton(skeleton, graphics, pen);
+
+            return bitmapClone;
+        }
+        public Bitmap RenderSkeleton(ColorImageFrame image, Skeleton skeleton)
         {
             Bitmap bitmap = ImageToBitmap(image);
             Graphics graphics = Graphics.FromImage(bitmap);
@@ -51,33 +69,20 @@ namespace KinectUtilities
 
             return bitmap;
         }
-
-        public static Bitmap RenderSkeleton(Bitmap bitmap, Skeleton skeleton)
+        public Bitmap RenderSkeleton(ColorImageFrame image, Skeleton skeleton, Pen pen)
         {
-            Graphics graphics = Graphics.FromImage(bitmap);
-            DrawSkeleton(skeleton, graphics);
-
-            return bitmap;
-        }
-
-        public static Bitmap RenderSkeleton(Bitmap bitmap, Skeleton skeleton, Pen pen)
-        {
+            Bitmap bitmap = ImageToBitmap(image);
             Graphics graphics = Graphics.FromImage(bitmap);
             DrawSkeleton(skeleton, graphics, pen);
 
             return bitmap;
         }
 
-        public static Bitmap RenderSkeleton(Skeleton skeleton)
-        {
-            Bitmap bitmap = (Bitmap)defaultBitamp.Clone();
-            Graphics graphics = Graphics.FromImage(bitmap);
-            DrawSkeleton(skeleton, graphics);
+        #endregion
 
-            return bitmap;
-        }
+        #region Private Methods
 
-        public static void DrawSkeleton(Skeleton skeleton, Graphics graphics)
+        private void DrawSkeleton(Skeleton skeleton, Graphics graphics)
         {
             // Head, shoulders, spine.
             DrawBone(JointType.Head, JointType.ShoulderCenter, skeleton, graphics);
@@ -109,7 +114,7 @@ namespace KinectUtilities
             DrawBone(JointType.WristRight, JointType.HandRight, skeleton, graphics);
         }
 
-        public static void DrawSkeleton(Skeleton skeleton, Graphics graphics, Pen pen)
+        private void DrawSkeleton(Skeleton skeleton, Graphics graphics, Pen pen)
         {
             // Head, shoulders, spine.
             DrawBone(JointType.Head, JointType.ShoulderCenter, skeleton, graphics, pen);
@@ -141,12 +146,12 @@ namespace KinectUtilities
             DrawBone(JointType.WristRight, JointType.HandRight, skeleton, graphics, pen);
         }
 
-        public static void DrawBone(JointType jointTypeA, JointType jointTypeB, Skeleton skeleton, Graphics graphics)
+        private void DrawBone(JointType jointTypeA, JointType jointTypeB, Skeleton skeleton, Graphics graphics)
         {
             DrawBone(jointTypeA, jointTypeB, skeleton, graphics, Pens.Red);
         }
 
-        public static void DrawBone(JointType jointTypeA, JointType jointTypeB, Skeleton skeleton, Graphics graphics, Pen pen)
+        private void DrawBone(JointType jointTypeA, JointType jointTypeB, Skeleton skeleton, Graphics graphics, Pen pen)
         {
             Point pointA = GetJoint(jointTypeA, skeleton);
             Point pointB = GetJoint(jointTypeB, skeleton);
@@ -157,14 +162,14 @@ namespace KinectUtilities
             }
         }
 
-        public static Point GetJoint(JointType jointType, Skeleton skeleton)
+        private Point GetJoint(JointType jointType, Skeleton skeleton)
         {
             SkeletonPoint skeletonPoint = skeleton.Joints[jointType].Position;
-            ColorImagePoint colorImagePoint = Sensor.CoordinateMapper.MapSkeletonPointToColorPoint(skeletonPoint, ColorImageFormat.RgbResolution640x480Fps30);
+            ColorImagePoint colorImagePoint = sensor.CoordinateMapper.MapSkeletonPointToColorPoint(skeletonPoint, ColorImageFormat.RgbResolution640x480Fps30);
             return new Point(colorImagePoint.X, colorImagePoint.Y);
         }
 
-        public static Bitmap ImageToBitmap(ColorImageFrame image)
+        private Bitmap ImageToBitmap(ColorImageFrame image)
         {
             byte[] pixeldata = new byte[image.PixelDataLength];
             image.CopyPixelDataTo(pixeldata);

@@ -45,13 +45,20 @@
     <Compile Include="Gesture Recognition\ConnectedJoint.cs" />
     <Compile Include="Gesture Recognition\AngleGestureRule.cs" />
     <Compile Include="Gesture Recognition\ChildGestureRules.cs" />
+    <Compile Include="Gesture Recognition\Gesture.cs" />
     <Compile Include="Gesture Recognition\GestureTree.cs" />
+    <Compile Include="Gesture Recognition\IGesture.cs" />
     <Compile Include="Gesture Recognition\IGestureRule.cs" />
-    <Compile Include="KinectSerializer.cs" />
+    <Compile Include="Kinect Sensor\SensorMode.cs" />
+    <Compile Include="Skeleton\SkeletonCapturingFunction.cs" />
+    <Compile Include="Skeleton\SkeletonController.cs" />
+    <Compile Include="Utilities\ImageUtilities.cs" />
+    <Compile Include="Utilities\KinectEventUtilities.cs" />
+    <Compile Include="Utilities\KinectSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SkeletonRecognizer.cs" />
-    <Compile Include="SkeletonRenderer.cs" />
-    <Compile Include="SmartKinectSensor.cs" />
+    <Compile Include="Skeleton\SkeletonRecognizer.cs" />
+    <Compile Include="Skeleton\SkeletonRenderer.cs" />
+    <Compile Include="Kinect Sensor\SmartKinectSensor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -29,11 +29,18 @@ namespace WorkBench
             InitializeComponent();
 
             sensor = new SmartKinectSensor();
-            sensor.SkeletonRenderedEventHandler += DisplayRenderedImage;
-            sensor.TestCapturedEventHandler += GestureCaptured;
-            sensor.NumberOfSkeletonsToRecognize = 1;
+            sensor.SkeletonController.SkeletonRenderedEventHandler += DisplayRenderedImage;
+            sensor.SkeletonController.GestureCapturedEventHandler += GestureCaptured;
             sensor.EnableSkeletonRenderingSensor();
 
+            capturedLabel.Visible = false;
+            sensor.SkeletonController.SkeletonCapturingFunctions.Add(SkeletonCapturingFunction.GestureCapturing);
+
+            // InitializeArduino();
+        }
+
+        public void InitializeArduino()
+        {
             serialPort = new ArduinoSerialPort("COM5", 115200);
             serialPort.Open();
 
@@ -52,6 +59,11 @@ namespace WorkBench
         public void DisplayRenderedImage(Bitmap image)
         {
             skeletonPicture.Image = image;
+        }
+
+        public void GestureCaptured(IGesture gesture)
+        {
+            capturedLabel.Visible = !capturedLabel.Visible;
         }
 
         public void GestureCaptured(bool captured)
