@@ -9,7 +9,6 @@ namespace KinectUtilities
     {
         SkeletonRendering = 1,
         SkeletonGestureCapturing = 2,
-        GestureCapturing = 3,
-        RenderCanvasActive = 4
+        GestureCapturing = 3
     }
 }

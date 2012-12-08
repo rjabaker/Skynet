@@ -60,8 +60,14 @@ namespace KinectUtilities
 
             UpdateSkeletonFrames(capturedFrames, timeStamp);
         }
-        public void SkeletonFrameCaptured(List<Skeleton> skeletons, DateTime timeStamp, Bitmap bitmap)
+        public void SkeletonFrameCaptured(List<Skeleton> skeletons, Bitmap bitmap, DateTime timeStamp)
         {
+            if (bitmap == null)
+            {
+                SkeletonFrameCaptured(skeletons, timeStamp);
+                return;
+            }
+
             List<SkeletonRenderFrame> capturedFrames = new List<SkeletonRenderFrame>();
 
             SkeletonRenderFrame skeletonFrame;
@@ -72,6 +78,27 @@ namespace KinectUtilities
             }
 
             UpdateSkeletonFrames(capturedFrames, timeStamp);
+        }
+
+        public Bitmap GetLatestImage()
+        {
+            DateTime latestDateTime = skeletonFrames.Count != 0 ? skeletonFrames.Keys.Max() : DateTime.MinValue;
+            return GetImageAtDateTime(latestDateTime);
+        }
+        public Bitmap GetImageAtDateTime(DateTime specifiedDateTime)
+        {
+            Bitmap image = null;
+
+            List<SkeletonRenderFrame> skeletonRenderFrames;
+            bool framesExist = skeletonFrames.TryGetValue(specifiedDateTime, out skeletonRenderFrames);
+
+            if (framesExist && skeletonRenderFrames.Count > 0)
+            {
+                // Image may be null.
+                image = skeletonRenderFrames[0].Image;
+            }
+
+            return image;
         }
 
         public void SaveCanvasFrames(string filename)

@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
+using Microsoft.Kinect;
+
 using KinectUtilities;
 using ArduinoUtilities;
 using Skynet;
@@ -35,7 +37,6 @@ namespace WorkBench
 
             capturedLabel.Visible = false;
             sensor.SkeletonController.SkeletonCapturingFunctions.Add(SkeletonCapturingFunction.GestureCapturing);
-            sensor.SkeletonController.SkeletonCapturingFunctions.Add(SkeletonCapturingFunction.RenderCanvasActive);
 
             // InitializeArduino();
         }
@@ -57,7 +58,7 @@ namespace WorkBench
             eStop.SetPin(true);
         }
 
-        public void DisplayRenderedImage(Bitmap image)
+        public void DisplayRenderedImage(List<Skeleton> skeletons, Bitmap image, DateTime timeStamp)
         {
             skeletonPicture.Image = image;
         }
