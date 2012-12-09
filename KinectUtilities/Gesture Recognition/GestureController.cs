@@ -20,6 +20,7 @@ namespace KinectUtilities.Gestures
         #region Private Variables
 
         private List<MovingGestureTree> movingGestureTrees;
+        private GestureBuilder gestureBuilder;
 
         #endregion
 
@@ -28,6 +29,7 @@ namespace KinectUtilities.Gestures
         public GestureController()
         {
             this.movingGestureTrees = new List<MovingGestureTree>();
+            this.gestureBuilder = new GestureBuilder();
         }
 
         #endregion
@@ -40,6 +42,19 @@ namespace KinectUtilities.Gestures
             {
                 movingGestureTree.ProcessSkeletonForGesture(skeleton, timeStamp);
             }
+        }
+
+        public void AddMovingGestureTree(MovingGestureTree movingGestureTree)
+        {
+            movingGestureTrees.Add(movingGestureTree);
+            movingGestureTree.GestureCaptured += new GestureUtilities.GestureCapturedEventHandler(movingGestureTree_GestureCaptured);
+        }
+        public MovingGestureTree BuildMovingGestureTree(GestureBuilderParameters gestureBuilderParameters, bool addWhenBuilt)
+        {
+            MovingGestureTree movingGestureTree = gestureBuilder.BuildMovingGestureTree(gestureBuilderParameters);
+            if (addWhenBuilt) AddMovingGestureTree(movingGestureTree);
+
+            return movingGestureTree;
         }
 
         #endregion

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -131,6 +132,14 @@ namespace KinectUtilities
             else
             {
                 skeletonFrames[key] = value;
+            }
+        }
+
+        public void Add(SkeletonRenderFrames skeletonRenderFrames)
+        {
+            foreach (DateTime timeStamp in skeletonRenderFrames.FramesTimeStamps)
+            {
+                Add(timeStamp, skeletonRenderFrames[timeStamp]);
             }
         }
 

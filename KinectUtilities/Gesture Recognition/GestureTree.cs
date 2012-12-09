@@ -38,6 +38,13 @@ namespace KinectUtilities.Gestures
             this.maxDeltaTime = maxDeltaTime;
             this.executed = false;
         }
+        public GestureTree(List<Joint> joints, double jointAngleTolerance, TimeSpan minDeltaTime, TimeSpan maxDeltaTime)
+        {
+            this.connectedJoints = BuildConnectedJoints(joints, jointAngleTolerance);
+            this.minDeltaTime = minDeltaTime;
+            this.maxDeltaTime = maxDeltaTime;
+            this.executed = false;
+        }
 
         #endregion
 
@@ -109,6 +116,7 @@ namespace KinectUtilities.Gestures
             return DoesSkeletonContainGesture(requiredJoints);
         }
 
+
         public void CaptureGestureTESTCODE(Skeleton skeleton)
         {
             // RBakerFlag -> THIS IS TEST CODE!
@@ -153,6 +161,27 @@ namespace KinectUtilities.Gestures
         #endregion
 
         #region Private Methods
+
+        private List<ConnectedJoint> BuildConnectedJoints(List<Joint> joints, double jointAngleTolerance)
+        {
+            List<ConnectedJoint> connectedJoints = new List<ConnectedJoint>();
+
+            for (int index = 0; index < joints.Count; index++)
+            {
+                connectedJoints.Add(new ConnectedJoint(joints[index].JointType, index));
+            }
+
+            for (int index = 0; index < connectedJoints.Count; index++)
+            {
+                for (int innerIndex = index + 1; innerIndex < connectedJoints.Count - 1; innerIndex++)
+                {
+                    if (innerIndex == index + 1) connectedJoints[index].NextJoint = connectedJoints[innerIndex];
+                    connectedJoints[index].AddChildJointAngleRule(joints[index], joints[innerIndex], connectedJoints[innerIndex], jointAngleTolerance);
+                }
+            }
+
+            return connectedJoints;
+        }
 
         private List<Joint> MineRequiredJoints(Skeleton skeleton)
         {

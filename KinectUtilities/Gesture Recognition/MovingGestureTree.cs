@@ -132,6 +132,15 @@ namespace KinectUtilities.Gestures
         {
             currentExecutionTime = TimeSpan.Zero;
             SetActiveGestureTrees();
+            ResetGestureTrees();
+        }
+        private void ResetGestureTrees()
+        {
+            // Set all gesture trees to unexecuted.
+            foreach (GestureTree gestureTree in gestureTrees)
+            {
+                gestureTree.Executed = false;
+            }
         }
         private bool FailedExecution()
         {

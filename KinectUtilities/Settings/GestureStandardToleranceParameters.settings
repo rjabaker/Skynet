@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="KinectUtilities.Settings" GeneratedClassName="GestureStandardToleranceParameters">
+  <Profiles />
+  <Settings>
+    <Setting Name="JointAngleTolerance" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">0.1</Value>
+    </Setting>
+    <Setting Name="FramesPerSecondCapture" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
