@@ -14,5 +14,12 @@ namespace KinectUtilities
 
             return dateTime;
         }
+
+        public static int DifferenceInMilliseconds(DateTime now, DateTime next)
+        {
+            // RBakerFlag -> Returns the difference in seconds accurate to hours.
+            return (next.Hour * 24 * 60 * 1000 + next.Minute * 60 * 1000 + next.Second * 1000 + next.Millisecond)
+                - (now.Hour * 24 * 60 * 1000 + now.Minute * 60 * 1000 + now.Second * 1000 + now.Millisecond);
+        }
     }
 }

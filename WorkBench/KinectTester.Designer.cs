@@ -30,6 +30,7 @@
         {
             this.skeletonPicture = new System.Windows.Forms.PictureBox();
             this.capturedLabel = new System.Windows.Forms.Label();
+            this.replayButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.skeletonPicture)).BeginInit();
             this.SuspendLayout();
             // 
@@ -52,11 +53,22 @@
             this.capturedLabel.TabIndex = 1;
             this.capturedLabel.Text = "Captured!";
             // 
+            // replayButton
+            // 
+            this.replayButton.Location = new System.Drawing.Point(547, 175);
+            this.replayButton.Name = "replayButton";
+            this.replayButton.Size = new System.Drawing.Size(170, 66);
+            this.replayButton.TabIndex = 2;
+            this.replayButton.Text = "Replay";
+            this.replayButton.UseVisualStyleBackColor = true;
+            this.replayButton.Click += new System.EventHandler(this.replayButton_Click);
+            // 
             // KinectTester
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(891, 540);
+            this.Controls.Add(this.replayButton);
             this.Controls.Add(this.capturedLabel);
             this.Controls.Add(this.skeletonPicture);
             this.Name = "KinectTester";
@@ -71,5 +83,6 @@
 
         private System.Windows.Forms.PictureBox skeletonPicture;
         private System.Windows.Forms.Label capturedLabel;
+        private System.Windows.Forms.Button replayButton;
     }
 }

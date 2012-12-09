@@ -19,7 +19,10 @@ namespace WorkBench
 {
     public partial class KinectTester : Form
     {
+        private delegate void DisplayRenderedImageEventHandler(Bitmap image, DateTime timeStamp);
+
         private SmartKinectSensor sensor;
+        private RenderCanvas renderCanvas;
 
         private ArduinoSerialPort serialPort;
         private PinMapping cwAnalogPinMapping;
@@ -31,9 +34,12 @@ namespace WorkBench
             InitializeComponent();
 
             sensor = new SmartKinectSensor();
-            sensor.SkeletonController.SkeletonRenderedEventHandler += DisplayRenderedImage;
-            sensor.SkeletonController.GestureCapturedEventHandler += GestureCaptured;
+            renderCanvas = new RenderCanvas(TimeSpan.FromSeconds(10));
+            sensor.SkeletonController.SkeletonRendered += renderCanvas.SkeletonFrameCaptured;
+            sensor.SkeletonController.GestureCaptured += GestureCaptured;
             sensor.EnableSkeletonRenderingSensor();
+
+            renderCanvas.ImageRendered += DisplayRenderedImage;
 
             capturedLabel.Visible = false;
             sensor.SkeletonController.SkeletonCapturingFunctions.Add(SkeletonCapturingFunction.GestureCapturing);
@@ -58,9 +64,17 @@ namespace WorkBench
             eStop.SetPin(true);
         }
 
-        public void DisplayRenderedImage(List<Skeleton> skeletons, Bitmap image, DateTime timeStamp)
+        public void DisplayRenderedImage(Bitmap image, DateTime timeStamp)
         {
-            skeletonPicture.Image = image;
+            if (this.skeletonPicture.InvokeRequired)
+            {
+                DisplayRenderedImageEventHandler d = new DisplayRenderedImageEventHandler(DisplayRenderedImage);
+                this.Invoke(d, new object[] { image, timeStamp });
+            }
+            else
+            {
+                skeletonPicture.Image = image;
+            }
         }
 
         public void GestureCaptured(IGesture gesture)
@@ -72,6 +86,11 @@ namespace WorkBench
         {
             cwAnalogPinMapping.SetPin(captured ? 255 : 0);
             ccwAnalogPinMapping.SetPin(0);
+        }
+
+        private void replayButton_Click(object sender, EventArgs e)
+        {
+            renderCanvas.ReplayCanvas();
         }
     }
 }

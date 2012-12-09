@@ -5,6 +5,8 @@ using System.Text;
 using System.Drawing;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Timers;
+using System.Threading;
 
 using Microsoft.Kinect;
 
@@ -14,12 +16,22 @@ namespace KinectUtilities
     /// The RenderCanvas does not drawn the skeleton, but it does retain a copy of the rendered images 
     /// (if any exist) and the SkeletonFrames. It's true  purpose is to catalog the movements of the last render duration.
     /// </summary>
-    public class RenderCanvas
+    public partial class RenderCanvas
     {
+        #region Events
+
+        public event ImagingUtilities.ImageRenderedEventHandler ImageRendered;
+
+        #endregion
+
         #region Private Variables
+
+        private static string canvasPlayerLock = "canvasPlayerLock";
 
         private SkeletonRenderFrames skeletonFrames;
         private TimeSpan renderDuration;
+        private CanvasMode canvasMode;
+        private CanvasMode previousCanvasMode;
 
         #endregion
 
@@ -29,6 +41,8 @@ namespace KinectUtilities
         {
             this.skeletonFrames = new SkeletonRenderFrames();
             this.renderDuration = renderDuration;
+            this.canvasMode = CanvasMode.ListeningAndFiring;
+            this.previousCanvasMode = CanvasMode.ListeningAndFiring;
         }
 
         #endregion
@@ -49,6 +63,8 @@ namespace KinectUtilities
 
         public void SkeletonFrameCaptured(List<Skeleton> skeletons, DateTime timeStamp)
         {
+            if (canvasMode != CanvasMode.Listening || canvasMode != CanvasMode.ListeningAndFiring) return;
+
             List<SkeletonRenderFrame> capturedFrames = new List<SkeletonRenderFrame>();
 
             SkeletonRenderFrame skeletonFrame;
@@ -62,6 +78,8 @@ namespace KinectUtilities
         }
         public void SkeletonFrameCaptured(List<Skeleton> skeletons, Bitmap bitmap, DateTime timeStamp)
         {
+            if (canvasMode != CanvasMode.Listening && canvasMode != CanvasMode.ListeningAndFiring) return;
+
             if (bitmap == null)
             {
                 SkeletonFrameCaptured(skeletons, timeStamp);
@@ -78,12 +96,28 @@ namespace KinectUtilities
             }
 
             UpdateSkeletonFrames(capturedFrames, timeStamp);
+            if (canvasMode == CanvasMode.Firing || canvasMode == CanvasMode.ListeningAndFiring) ImageRendered(bitmap, timeStamp);
+        }
+
+        public void ReplayCanvas()
+        {
+            previousCanvasMode = canvasMode;
+            canvasMode = CanvasMode.Firing;
+
+            lock (canvasPlayerLock)
+            {
+                CanvasPlayer canvasPlayer = new CanvasPlayer(this.skeletonFrames);
+                canvasPlayer.ImageRendered += new ImagingUtilities.ImageRenderedEventHandler(canvasPlayer_ImageRendered);
+                canvasPlayer.PlayerFinished += new CanvasPlayer.PlayerFinishedEventHandler(canvasPlayer_PlayerFinished);
+                Thread thread = new Thread(canvasPlayer.Start);
+                thread.Start();
+            }
         }
 
         public Bitmap GetLatestImage()
         {
-            DateTime latestDateTime = skeletonFrames.Count != 0 ? skeletonFrames.Keys.Max() : DateTime.MinValue;
-            return GetImageAtDateTime(latestDateTime);
+            DateTime mostRecent = skeletonFrames.MostRecentFrameTime;
+            return GetImageAtDateTime(mostRecent);
         }
         public Bitmap GetImageAtDateTime(DateTime specifiedDateTime)
         {
@@ -116,8 +150,8 @@ namespace KinectUtilities
 
         private void UpdateSkeletonFrames(List<SkeletonRenderFrame> capturedFrames, DateTime timeStamp)
         {
-            DateTime oldest = skeletonFrames.Count != 0 ? skeletonFrames.Keys.Min() : DateTime.MinValue;
-            if (oldest != DateTime.MinValue && timeStamp - oldest > renderDuration)
+            DateTime oldest = skeletonFrames.OldestFrameTime;
+            if (oldest != DateTime.MinValue && DateTimeUtilities.DifferenceInMilliseconds(oldest, timeStamp) > renderDuration.TotalSeconds * 1000)
             {
                 skeletonFrames.Remove(oldest);
                 UpdateSkeletonFrames(capturedFrames, timeStamp);
@@ -126,6 +160,19 @@ namespace KinectUtilities
             {
                 skeletonFrames.Add(timeStamp, capturedFrames);
             }
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        private void canvasPlayer_ImageRendered(Bitmap image, DateTime timeStamp)
+        {
+            ImageRendered(image, timeStamp);
+        }
+        private void canvasPlayer_PlayerFinished()
+        {
+            canvasMode = previousCanvasMode;
         }
 
         #endregion

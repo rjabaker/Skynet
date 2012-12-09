@@ -16,8 +16,8 @@ namespace KinectUtilities
     {
         #region Event Handlers
 
-        private KinectEventUtilities.SkeletonRenderedEventHandler skeletonRenderedEventHandler;
-        private KinectEventUtilities.GestureCapturedEventHandler gestureCapturedEventHandler;
+        public event KinectEventUtilities.SkeletonRenderedEventHandler SkeletonRendered;
+        public event KinectEventUtilities.GestureCapturedEventHandler GestureCaptured;
 
         #endregion
 
@@ -45,35 +45,12 @@ namespace KinectUtilities
             this.capturingFunctions = new List<SkeletonCapturingFunction>();
             this.numberOfSkeletonsToRecognize = 1;
 
-            this.defaultBitmap = ImageUtilities.CreateDefaultBitmap(new Size(this.sensor.ColorStream.FrameWidth, this.sensor.ColorStream.FrameHeight), Color.Black);
+            this.defaultBitmap = ImagingUtilities.CreateDefaultBitmap(new Size(this.sensor.ColorStream.FrameWidth, this.sensor.ColorStream.FrameHeight), Color.Black);
         }
 
         #endregion
 
         #region Properties
-
-        public KinectEventUtilities.SkeletonRenderedEventHandler SkeletonRenderedEventHandler
-        {
-            get
-            {
-                return skeletonRenderedEventHandler;
-            }
-            set
-            {
-                skeletonRenderedEventHandler = value;
-            }
-        }
-        public KinectEventUtilities.GestureCapturedEventHandler GestureCapturedEventHandler
-        {
-            get
-            {
-                return gestureCapturedEventHandler;
-            }
-            set
-            {
-                gestureCapturedEventHandler = value;
-            }
-        }
 
         public Bitmap DefaultBitmap
         {
@@ -141,7 +118,7 @@ namespace KinectUtilities
                 bitmap = skeletonRenderer.RenderSkeleton(bitmap, skeleton);
             }
 
-            if (skeletonRenderedEventHandler != null) skeletonRenderedEventHandler(skeletons, bitmap, timeStamp);
+            SkeletonRendered(skeletons, bitmap, timeStamp);
         }
         private void RenderSkeletons(List<Skeleton> skeletons, ColorImageFrame imageFrame, DateTime timeStamp)
         {
@@ -159,7 +136,7 @@ namespace KinectUtilities
                 }
             }
 
-            if (skeletonRenderedEventHandler != null && bitmap != null) skeletonRenderedEventHandler(skeletons, bitmap, timeStamp);
+            if (bitmap != null) SkeletonRendered(skeletons, bitmap, timeStamp);
         }
 
         private void CaptureGestures(List<Skeleton> skeletons)

@@ -8,10 +8,11 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace KinectUtilities
 {
     [Serializable()]
-    public class SkeletonRenderFrames : IDictionary<DateTime, List<SkeletonRenderFrame>>, ISerializable
+    public class SkeletonRenderFrames
     {
         #region Private Variables
 
+        private List<DateTime> framesTimeStamps;
         private Dictionary<DateTime, List<SkeletonRenderFrame>> skeletonFrames;
         private bool isReadOnly;
 
@@ -21,6 +22,7 @@ namespace KinectUtilities
 
         public SkeletonRenderFrames()
         {
+            this.framesTimeStamps = new List<DateTime>();
             this.skeletonFrames = new Dictionary<DateTime, List<SkeletonRenderFrame>>();
             this.isReadOnly = false;
         }
@@ -34,17 +36,45 @@ namespace KinectUtilities
         {
             this.isReadOnly = (bool)info.GetValue("isReadOnly", typeof(bool));
             this.skeletonFrames = (Dictionary<DateTime, List<SkeletonRenderFrame>>)info.GetValue("skeletonFrames", typeof(Dictionary<DateTime, List<SkeletonRenderFrame>>));
+            BuildFrameTimeStampsCollection();
         }
 
         #endregion
 
         #region Properties
 
-        public ICollection<DateTime> Keys
+        public DateTime MostRecentFrameTime
         {
-            get { return skeletonFrames.Keys; }
+            get
+            {
+                return FramesTimeStamps.Count > 0 ? FramesTimeStamps.Last() : DateTime.MinValue;
+            }
         }
-
+        public DateTime OldestFrameTime
+        {
+            get
+            {
+                return FramesTimeStamps.Count > 0 ? FramesTimeStamps.First() : DateTime.MinValue;
+            }
+        }
+        public List<DateTime> FramesTimeStamps
+        {
+            get
+            {
+                return framesTimeStamps;
+            }
+        }
+        public DateTime this[int index]
+        {
+            get
+            {
+                return framesTimeStamps[index];
+            }
+            set
+            {
+                framesTimeStamps[index] = value;
+            }
+        }
         public List<SkeletonRenderFrame> this[DateTime key]
         {
             get
@@ -56,25 +86,23 @@ namespace KinectUtilities
                 skeletonFrames[key] = value;
             }
         }
-
         public int Count
         {
-            get { return skeletonFrames.Count; }
+            get { return framesTimeStamps.Count; }
         }
-
         public bool IsReadOnly
         {
             get { return isReadOnly; }
         }
 
-        public ICollection<List<SkeletonRenderFrame>> Values
-        {
-            get { return skeletonFrames.Values; }
-        }
-
         #endregion
 
         #region Public Methods
+
+        public void Sort()
+        {
+            framesTimeStamps.Sort();
+        }
 
         public void Add(DateTime key, List<SkeletonRenderFrame> value)
         {
@@ -83,6 +111,22 @@ namespace KinectUtilities
             if (!skeletonFrames.ContainsKey(key))
             {
                 skeletonFrames.Add(key, value);
+                framesTimeStamps.Add(key);
+            }
+            else
+            {
+                skeletonFrames[key] = value;
+            }
+        }
+
+        public void Add(DateTime key, List<SkeletonRenderFrame> value, int index)
+        {
+            if (isReadOnly) return;
+
+            if (!skeletonFrames.ContainsKey(key))
+            {
+                skeletonFrames.Add(key, value);
+                framesTimeStamps.Insert(index, key);
             }
             else
             {
@@ -102,6 +146,11 @@ namespace KinectUtilities
             if (!isReadOnly && skeletonFrames.ContainsKey(key))
             {
                 removed = skeletonFrames.Remove(key);
+                if (framesTimeStamps.Contains(key)) removed = framesTimeStamps.Remove(key);
+            }
+            else if (!isReadOnly && framesTimeStamps.Contains(key))
+            {
+                removed = framesTimeStamps.Remove(key);
             }
 
             return removed;
@@ -112,27 +161,16 @@ namespace KinectUtilities
             return skeletonFrames.TryGetValue(key, out value);
         }
 
-        public void Add(KeyValuePair<DateTime, List<SkeletonRenderFrame>> item)
-        {
-            if (isReadOnly) return;
-            skeletonFrames.Add(item.Key, item.Value);
-        }
-
         public void Clear()
         {
             if (isReadOnly) return;
             skeletonFrames.Clear();
+            framesTimeStamps.Clear();
         }
 
-        public bool Contains(KeyValuePair<DateTime, List<SkeletonRenderFrame>> item)
+        public bool Contains(DateTime dateTime)
         {
-            return skeletonFrames.ContainsKey(item.Key) && skeletonFrames[item.Key] == item.Value;
-        }
-
-        public void CopyTo(KeyValuePair<DateTime, List<SkeletonRenderFrame>>[] array, int arrayIndex)
-        {
-            KeyValuePair<DateTime, List<SkeletonRenderFrame>>[] frames = skeletonFrames.ToArray<KeyValuePair<DateTime, List<SkeletonRenderFrame>>>();
-            frames.CopyTo(array, arrayIndex);
+            return framesTimeStamps.Contains(dateTime) && skeletonFrames.ContainsKey(dateTime);
         }
 
         public bool Remove(KeyValuePair<DateTime, List<SkeletonRenderFrame>> item)
@@ -142,25 +180,33 @@ namespace KinectUtilities
             if (!isReadOnly && skeletonFrames.ContainsKey(item.Key) && skeletonFrames[item.Key] == item.Value)
             {
                 removed = skeletonFrames.Remove(item.Key);
+                if (framesTimeStamps.Contains(item.Key)) removed = framesTimeStamps.Remove(item.Key);
             }
 
             return removed;
-        }
-
-        public IEnumerator<KeyValuePair<DateTime, List<SkeletonRenderFrame>>> GetEnumerator()
-        {
-            return skeletonFrames.GetEnumerator();
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("isReadOnly", this.isReadOnly);
             info.AddValue("skeletonFrames", this.skeletonFrames);
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void BuildFrameTimeStampsCollection()
+        {
+            if (skeletonFrames.Count > 0)
+            {
+                framesTimeStamps = skeletonFrames.Keys.ToList();
+                framesTimeStamps.Sort();
+            }
+            else
+            {
+                framesTimeStamps = new List<DateTime>();
+            }
         }
 
         #endregion

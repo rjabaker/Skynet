@@ -6,8 +6,16 @@ using System.Drawing;
 
 namespace KinectUtilities
 {
-    public static class ImageUtilities
+    public static class ImagingUtilities
     {
+        #region Delegates
+
+        public delegate void ImageRenderedEventHandler(Bitmap image, DateTime timeStamp);
+
+        #endregion
+
+        #region Public Static Methods
+
         public static Bitmap CreateDefaultBitmap(Size size, Color color)
         {
             Bitmap defaultBitamp = new Bitmap(size.Width, size.Height);
@@ -22,5 +30,7 @@ namespace KinectUtilities
 
             return defaultBitamp;
         }
+
+        #endregion
     }
 }
