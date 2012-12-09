@@ -163,6 +163,14 @@ namespace KinectUtilities
             {
                 skeletonFrames.Add(timeStamp, capturedFrames);
             }
+
+            if (skeletonFrames.Count == 290)
+            {
+                // RBakerFlag -> TESTCODE! REMOVE ASAP!
+                Gestures.GestureBuilder b = new Gestures.GestureBuilder();
+                Gestures.GestureBuilderParameters p = new Gestures.GestureBuilderParameters(null, skeletonFrames, skeletonFrames.FramesTimeStamps.First(), TimeSpan.FromSeconds(7), Gestures.GestureBuilder.BuildStrategy.StandardTolerance);
+                b.BuildMovingGestureTree(p);
+            }
         }
 
         private void SetCanvasMode(CanvasMode mode)

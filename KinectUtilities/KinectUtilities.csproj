@@ -46,17 +46,31 @@
     <Compile Include="Gesture Recognition\AngleGestureRule.cs" />
     <Compile Include="Gesture Recognition\ChildGestureRules.cs" />
     <Compile Include="Gesture Recognition\Gesture.cs" />
+    <Compile Include="Gesture Recognition\GestureBuilder.BuildStrategy.cs" />
+    <Compile Include="Gesture Recognition\GestureBuilder.cs" />
+    <Compile Include="Gesture Recognition\GestureBuilder.StandardToleranceMethod.cs" />
+    <Compile Include="Gesture Recognition\GestureBuilderParameters.cs" />
+    <Compile Include="Gesture Recognition\GestureController.cs" />
     <Compile Include="Gesture Recognition\GestureTree.cs" />
     <Compile Include="Gesture Recognition\IGesture.cs" />
+    <Compile Include="Gesture Recognition\IGestureBuilderMethod.cs" />
     <Compile Include="Gesture Recognition\IGestureRule.cs" />
+    <Compile Include="Gesture Recognition\MovingGestureTree.cs" />
     <Compile Include="Interfacing\RenderCanvas.CanvasPlayer.cs" />
     <Compile Include="Interfacing\RenderCanvas.cs" />
     <Compile Include="Kinect Sensor\SensorMode.cs" />
+    <Compile Include="Settings Access\GestureStandardToleranceParameters.cs" />
+    <Compile Include="Settings\GestureStandardToleranceParameters.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>GestureStandardToleranceParameters.settings</DependentUpon>
+    </Compile>
     <Compile Include="Skeleton\SkeletonCapturingFunction.cs" />
     <Compile Include="Skeleton\SkeletonController.cs" />
     <Compile Include="Skeleton\SkeletonRenderFrame.cs" />
     <Compile Include="Skeleton\SkeletonRenderFrames.cs" />
     <Compile Include="Utilities\DateTimeUtilities.cs" />
+    <Compile Include="Utilities\GestureUtilities.cs" />
     <Compile Include="Utilities\ImagingUtilities.cs" />
     <Compile Include="Utilities\KinectEventUtilities.cs" />
     <Compile Include="Utilities\KinectSerializer.cs" />
@@ -64,9 +78,18 @@
     <Compile Include="Skeleton\SkeletonRecognizer.cs" />
     <Compile Include="Skeleton\SkeletonRenderer.cs" />
     <Compile Include="Kinect Sensor\SmartKinectSensor.cs" />
+    <Compile Include="Utilities\SkeletonMiningUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfacing\RenderCanvas.CanvasMode.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Settings\GestureStandardToleranceParameters.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>GestureStandardToleranceParameters.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

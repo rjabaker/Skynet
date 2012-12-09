@@ -34,7 +34,7 @@ namespace KinectUtilities
 
         #region Private Static Methods
 
-        private List<Joint> GetHeadAndSpineJointCollection(Skeleton skeleton)
+        private static List<Joint> GetHeadAndSpineJointCollection(Skeleton skeleton)
         {
             List<Joint> joints = new List<Joint>();
             joints.Add(skeleton.Joints[JointType.Head]);
@@ -44,7 +44,7 @@ namespace KinectUtilities
 
             return joints;
         }
-        private List<Joint> GetRightArmJointCollection(Skeleton skeleton)
+        private static List<Joint> GetRightArmJointCollection(Skeleton skeleton)
         {
             List<Joint> joints = new List<Joint>();
             joints.Add(skeleton.Joints[JointType.ShoulderCenter]);
@@ -55,7 +55,7 @@ namespace KinectUtilities
 
             return joints;
         }
-        private List<Joint> GetLeftArmJointCollection(Skeleton skeleton)
+        private static List<Joint> GetLeftArmJointCollection(Skeleton skeleton)
         {
             List<Joint> joints = new List<Joint>();
             joints.Add(skeleton.Joints[JointType.ShoulderCenter]);
@@ -66,7 +66,7 @@ namespace KinectUtilities
 
             return joints;
         }
-        private List<Joint> GetRightLegJointCollection(Skeleton skeleton)
+        private static List<Joint> GetRightLegJointCollection(Skeleton skeleton)
         {
             List<Joint> joints = new List<Joint>();
             joints.Add(skeleton.Joints[JointType.HipCenter]);
@@ -77,7 +77,7 @@ namespace KinectUtilities
 
             return joints;
         }
-        private List<Joint> GetLeftLegJointCollection(Skeleton skeleton)
+        private static List<Joint> GetLeftLegJointCollection(Skeleton skeleton)
         {
             List<Joint> joints = new List<Joint>();
             joints.Add(skeleton.Joints[JointType.HipCenter]);

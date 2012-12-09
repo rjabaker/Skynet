@@ -56,6 +56,7 @@ namespace KinectUtilities.Gestures
             {
                 SetUpRenderFramesForGestureBuilding();
                 CalculateBuildParameters();
+                BuildFrames();
             }
 
             #endregion
@@ -70,6 +71,14 @@ namespace KinectUtilities.Gestures
                 }
             }
 
+            private void BuildFrames()
+            {
+                foreach (DateTime timeStamp in framesCapture.FramesTimeStamps)
+                {
+                    // Default to first frame.
+                    if (framesCapture[timeStamp].Count > 0) BuildFrame(framesCapture[timeStamp][0]);
+                }
+            }
             private void BuildFrame(SkeletonRenderFrame frame)
             {
                 // Converts the frame into a collection of GestureTrees and adds it to the MovingGestureTree.
@@ -143,10 +152,11 @@ namespace KinectUtilities.Gestures
                 foreach (DateTime timeStamp in parameters.SkeletonRenderFrames.FramesTimeStamps)
                 {
                     if (intervalSpan.Equals(TimeSpan.Zero)) oneSecondIntervalFrames = new SkeletonRenderFrames();
+                    if (parameters.SkeletonRenderFrames[timeStamp].Count == 0) continue;
 
                     oneSecondIntervalFrames.Add(timeStamp, parameters.SkeletonRenderFrames[timeStamp]);
                     deltaFrameSpan = TimeSpan.FromMilliseconds(DateTimeUtilities.DifferenceInMilliseconds(gestureStartDateTime, timeStamp));
-                    intervalSpan.Add(deltaFrameSpan);
+                    intervalSpan = intervalSpan.Add(deltaFrameSpan);
 
                     if (intervalSpan >= oneSecond)
                     {
@@ -171,6 +181,14 @@ namespace KinectUtilities.Gestures
                     int count = 0;
                     foreach (DateTime timeStamp in parameters.SkeletonRenderFrames.FramesTimeStamps)
                     {
+                        if (framesCapture.Count == 0)
+                        {
+                            // Make sure first frame is always saved in capture.
+                            framesCapture.Add(timeStamp, parameters.SkeletonRenderFrames[timeStamp]);
+                            count = 0;
+                            continue;
+                        }
+
                         count += 1;
                         if (count > frameStep)
                         {

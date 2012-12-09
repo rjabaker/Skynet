@@ -77,7 +77,7 @@ namespace WorkBench
             }
         }
 
-        public void GestureCaptured(IGesture gesture)
+        public void GestureCaptured(IGesture gesture, DateTime timeStamp)
         {
             capturedLabel.Visible = !capturedLabel.Visible;
         }
