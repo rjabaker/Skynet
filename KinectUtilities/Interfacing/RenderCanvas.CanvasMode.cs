@@ -11,7 +11,8 @@ namespace KinectUtilities
         {
             Firing = 1,
             Listening = 2,
-            ListeningAndFiring = 3
+            ListeningAndFiring = 3,
+            Stopped = 4
         }
 	}
 }

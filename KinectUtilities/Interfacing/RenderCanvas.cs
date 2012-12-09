@@ -101,8 +101,7 @@ namespace KinectUtilities
 
         public void ReplayCanvas()
         {
-            previousCanvasMode = canvasMode;
-            canvasMode = CanvasMode.Firing;
+            SetCanvasMode(CanvasMode.Firing);
 
             lock (canvasPlayerLock)
             {
@@ -137,11 +136,15 @@ namespace KinectUtilities
 
         public void SaveCanvasFrames(string filename)
         {
+            SetCanvasMode(CanvasMode.Stopped);
             KinectSerializer.SerializeObject<SkeletonRenderFrames>(filename, skeletonFrames);
+            RevertCanvasMode();
         }
         public void LoadCanvasFrames(string filename)
         {
+            SetCanvasMode(CanvasMode.Stopped);
             skeletonFrames = KinectSerializer.DeserializeObject<SkeletonRenderFrames>(filename);
+            RevertCanvasMode();
         }
 
         #endregion
@@ -162,6 +165,16 @@ namespace KinectUtilities
             }
         }
 
+        private void SetCanvasMode(CanvasMode mode)
+        {
+            previousCanvasMode = canvasMode;
+            canvasMode = mode;
+        }
+        private void RevertCanvasMode()
+        {
+            SetCanvasMode(previousCanvasMode);
+        }
+
         #endregion
 
         #region Event Handlers
@@ -172,7 +185,7 @@ namespace KinectUtilities
         }
         private void canvasPlayer_PlayerFinished()
         {
-            canvasMode = previousCanvasMode;
+            RevertCanvasMode();
         }
 
         #endregion
