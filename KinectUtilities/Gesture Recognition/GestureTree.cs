@@ -16,6 +16,9 @@ namespace KinectUtilities.Gestures
         #region Private Variables
 
         private List<ConnectedJoint> connectedJoints;
+        private TimeSpan maxDeltaTime;
+        private TimeSpan minDeltaTime;
+        private bool executed;
 
         #endregion
 
@@ -23,8 +26,17 @@ namespace KinectUtilities.Gestures
 
         public GestureTree()
         {
-            // RBakerFlag -> Build this gesture tree by deserializing XML.
-            connectedJoints = new List<ConnectedJoint>();
+            this.connectedJoints = new List<ConnectedJoint>();
+            this.minDeltaTime = TimeSpan.Zero;
+            this.maxDeltaTime = TimeSpan.Zero;
+            this.executed = false;
+        }
+        public GestureTree(TimeSpan minDeltaTime, TimeSpan maxDeltaTime)
+        {
+            this.connectedJoints = new List<ConnectedJoint>();
+            this.minDeltaTime = minDeltaTime;
+            this.maxDeltaTime = maxDeltaTime;
+            this.executed = false;
         }
 
         #endregion
@@ -41,17 +53,63 @@ namespace KinectUtilities.Gestures
             }
         }
 
+        [XmlElement("MaxDeltaTime")]
+        public TimeSpan MaxDeltaTime
+        {
+            get
+            {
+                return maxDeltaTime;
+            }
+            set
+            {
+                maxDeltaTime = value;
+            }
+        }
+
+        [XmlElement("MinDeltaTime")]
+        public TimeSpan MinDeltaTime
+        {
+            get
+            {
+                return minDeltaTime;
+            }
+            set
+            {
+                minDeltaTime = value;
+            }
+        }
+
+        [XmlIgnore()]
+        public bool Executed
+        {
+            get
+            {
+                return executed;
+            }
+            set
+            {
+                executed = value;
+            }
+        }
+
         #endregion
 
         #region Public Methods
 
-        public bool DoesSkeletonContainGesture(List<Joint> skeletonJoints)
+        public void SearchForGestureExecution(Skeleton skeleton, TimeSpan currentExecutionTime)
         {
-            // Returns true if the list of joints matches the gesture tree.
-            List<Joint> cloneList = skeletonJoints.ToList<Joint>();
-            return connectedJoints.Count != 0 && DoesParentSatisfyRules(connectedJoints.First(), cloneList);
+            bool containsGesture = DoesSkeletonContainGesture(skeleton, currentExecutionTime);
+            if (containsGesture) executed = true;
         }
-        public void CaptureGesture(Skeleton skeleton)
+        public bool DoesSkeletonContainGesture(Skeleton skeleton, TimeSpan currentExecutionTime)
+        {
+            if (!StillActive(currentExecutionTime)) return false;
+
+            List<Joint> requiredJoints = MineRequiredJoints(skeleton);
+            return DoesSkeletonContainGesture(requiredJoints);
+        }
+
+        public void CaptureGestureTESTCODE(Skeleton skeleton)
         {
             // RBakerFlag -> THIS IS TEST CODE!
             ConnectedJoint a = new ConnectedJoint(skeleton.Joints[JointType.ShoulderRight].JointType, 1);
@@ -79,10 +137,40 @@ namespace KinectUtilities.Gestures
             connectedJoints.Add(d);
         }
 
+        public bool StillActive(TimeSpan currentExecutionTime)
+        {
+            return executed && currentExecutionTime <= maxDeltaTime && currentExecutionTime >= minDeltaTime;
+        }
+        public bool FailedExecution(TimeSpan currentExecutionTime)
+        {
+            return !executed && currentExecutionTime >= maxDeltaTime;
+        }
+        public bool NotActiveYet(TimeSpan currentExecutionTime)
+        {
+            return currentExecutionTime < minDeltaTime;
+        }
+
         #endregion
 
         #region Private Methods
 
+        private List<Joint> MineRequiredJoints(Skeleton skeleton)
+        {
+            // Assumes the connectedJoints are sorted.
+            List<Joint> requiredJoints = new List<Joint>();
+            foreach (ConnectedJoint connectedJoint in connectedJoints)
+            {
+                requiredJoints.Add(skeleton.Joints[connectedJoint.JointType]);
+            }
+
+            return requiredJoints;
+        }
+
+        private bool DoesSkeletonContainGesture(List<Joint> skeletonJoints)
+        {
+            // Returns true if the list of joints matches the gesture tree.
+            return connectedJoints.Count != 0 && DoesParentSatisfyRules(connectedJoints.First(), skeletonJoints);
+        }
         private bool DoesParentSatisfyRules(ConnectedJoint connectedJoint, List<Joint> skeletonJoints)
         {
             bool satisfyRules = true;

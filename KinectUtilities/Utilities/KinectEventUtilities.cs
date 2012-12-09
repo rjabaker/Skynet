@@ -14,7 +14,7 @@ namespace KinectUtilities
         #region Delegates
 
         public delegate void SkeletonRenderedEventHandler(List<Skeleton> skeletons, Bitmap image, DateTime timeStamp);
-        public delegate void GestureCapturedEventHandler(IGesture gesture);
+        public delegate void GestureCapturedEventHandler(IGesture gesture, DateTime timeStamp);
 
         #endregion
     }

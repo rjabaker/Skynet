@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 using Microsoft.Kinect;
 
@@ -9,6 +10,7 @@ using KinectUtilities;
 
 namespace KinectUtilities
 {
+    [XmlRoot("Gesture")]
     public class Gesture : IGesture
     {
         #region Private Variables
@@ -18,8 +20,24 @@ namespace KinectUtilities
 
         #endregion
 
+        #region Constructors
+
+        public Gesture()
+        {
+            this.gestureName = string.Empty;
+            this.gestureID = -1;
+        }
+        public Gesture(string gestureName, int gestureID)
+        {
+            this.gestureName = gestureName;
+            this.gestureID = gestureID;
+        }
+
+        #endregion
+
         #region Properties
 
+        [XmlElement("GestureName")]
         public string GestureName
         {
             get
@@ -31,6 +49,8 @@ namespace KinectUtilities
                 gestureName = value;
             }
         }
+
+        [XmlElement("GestureID")]
         public int GestureID
         {
             get
