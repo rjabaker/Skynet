@@ -111,20 +111,17 @@ namespace KinectUtilities
         }
         private void UpdateMemoryIntervalMetadata()
         {
-            gestureStartTimeListBox.BeginUpdate();
-            gestureStartTimeListBox.DataSource = renderCanvas.FramesTimeStamps;
-            gestureStartTimeListBox.FormatString = "mm:ss.fff";
-            gestureStartTimeListBox.EndUpdate();
+            UpdateGestureStartAndEndTimeListBoxes();
         }
         private void UpdateGestureStartAndEndTimeListBoxes()
         {
             gestureStartTimeListBox.BeginUpdate();
-            gestureStartTimeListBox.DataSource = renderCanvas.FramesTimeStamps;
+            gestureStartTimeListBox.DataSource = renderCanvas.FramesTimeStamps.ToList<DateTime>();
             gestureStartTimeListBox.FormatString = "mm:ss.fff";
             gestureStartTimeListBox.EndUpdate();
 
             gestureEndTimeListBox.BeginUpdate();
-            gestureEndTimeListBox.DataSource = renderCanvas.FramesTimeStamps;
+            gestureEndTimeListBox.DataSource = renderCanvas.FramesTimeStamps.ToList<DateTime>();
             gestureEndTimeListBox.FormatString = "mm:ss.fff";
             gestureEndTimeListBox.EndUpdate();
         }
@@ -151,6 +148,17 @@ namespace KinectUtilities
                 replayButton.BackColor = Color.Gray;
             }
         }
+        private void SetReplayIntervalButtonColor()
+        {
+            if (replaying)
+            {
+                replayIntervalButton.BackColor = Color.Green;
+            }
+            else
+            {
+                replayIntervalButton.BackColor = Color.Gray;
+            }
+        }
 
         #endregion
 
@@ -166,6 +174,7 @@ namespace KinectUtilities
         {
             replaying = false;
             SetReplayButtonColor();
+            SetReplayIntervalButtonColor();
         }
 
         private void replayButton_Click(object sender, EventArgs e)
@@ -174,11 +183,24 @@ namespace KinectUtilities
             recording = false;
             ToggleRenderCanvas(recording);
             SetRecordButtonColor();
-            UpdateMemoryIntervalMetadata();
 
             replaying = true;
             renderCanvas.ReplayCanvas();
             SetReplayButtonColor();
+        }
+        private void replayIntervalButton_Click(object sender, EventArgs e)
+        {
+            DateTime start = (DateTime)gestureStartTimeListBox.SelectedItem;
+            DateTime end = (DateTime)gestureEndTimeListBox.SelectedItem;
+
+            // Stop recording.
+            recording = false;
+            ToggleRenderCanvas(recording);
+            SetRecordButtonColor();
+
+            replaying = true;
+            renderCanvas.ReplayCanvas(start, end);
+            SetReplayIntervalButtonColor();
         }
         private void recordButton_Click(object sender, EventArgs e)
         {

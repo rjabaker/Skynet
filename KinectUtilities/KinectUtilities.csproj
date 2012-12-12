@@ -90,9 +90,7 @@
   <ItemGroup>
     <Compile Include="Interfacing\RenderCanvas.CanvasMode.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Form Procedures\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Settings\GestureStandardToleranceParameters.settings">

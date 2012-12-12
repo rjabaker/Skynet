@@ -43,6 +43,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.gestureEndTimeListBox = new System.Windows.Forms.ListBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.replayIntervalButton = new System.Windows.Forms.Button();
             this.gestureParametersGroupBox.SuspendLayout();
             this.frameCaptureControlGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.frameCapturePictureBox)).BeginInit();
@@ -98,7 +99,7 @@
             // 
             // recordButton
             // 
-            this.recordButton.Location = new System.Drawing.Point(724, 670);
+            this.recordButton.Location = new System.Drawing.Point(626, 670);
             this.recordButton.Name = "recordButton";
             this.recordButton.Size = new System.Drawing.Size(92, 31);
             this.recordButton.TabIndex = 2;
@@ -126,7 +127,7 @@
             // 
             // replayButton
             // 
-            this.replayButton.Location = new System.Drawing.Point(822, 670);
+            this.replayButton.Location = new System.Drawing.Point(724, 670);
             this.replayButton.Name = "replayButton";
             this.replayButton.Size = new System.Drawing.Size(92, 31);
             this.replayButton.TabIndex = 5;
@@ -202,11 +203,22 @@
             this.label3.TabIndex = 3;
             this.label3.Text = "Gesture End Time: ";
             // 
+            // replayIntervalButton
+            // 
+            this.replayIntervalButton.Location = new System.Drawing.Point(822, 670);
+            this.replayIntervalButton.Name = "replayIntervalButton";
+            this.replayIntervalButton.Size = new System.Drawing.Size(92, 31);
+            this.replayIntervalButton.TabIndex = 6;
+            this.replayIntervalButton.Text = "Replay Interval";
+            this.replayIntervalButton.UseVisualStyleBackColor = true;
+            this.replayIntervalButton.Click += new System.EventHandler(this.replayIntervalButton_Click);
+            // 
             // GestureBuilderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(926, 713);
+            this.Controls.Add(this.replayIntervalButton);
             this.Controls.Add(this.replayButton);
             this.Controls.Add(this.frameCaptureControlGroupBox);
             this.Controls.Add(this.gestureParametersGroupBox);
@@ -241,5 +253,6 @@
         private System.Windows.Forms.ListBox gestureStartTimeListBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ListBox gestureEndTimeListBox;
+        private System.Windows.Forms.Button replayIntervalButton;
     }
 }

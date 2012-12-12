@@ -149,7 +149,35 @@ namespace KinectUtilities
                 thread.Start();
             }
         }
+        public void ReplayCanvas(DateTime startTime, DateTime endTime)
+        {
+            SetCanvasMode(Mode.Firing);
+            SkeletonRenderFrames frames = GetFramesWithinInterval(startTime, endTime);
 
+            lock (canvasPlayerLock)
+            {
+                CanvasPlayer canvasPlayer = new CanvasPlayer(frames);
+                canvasPlayer.ImageRendered += new ImagingUtilities.ImageRenderedEventHandler(canvasPlayer_ImageRendered);
+                canvasPlayer.PlayerFinished += new CanvasPlayer.PlayerFinishedEventHandler(canvasPlayer_PlayerFinished);
+                Thread thread = new Thread(canvasPlayer.Start);
+                thread.Start();
+            }
+        }
+
+        public SkeletonRenderFrames GetFramesWithinInterval(DateTime startTime, DateTime endTime)
+        {
+            SkeletonRenderFrames frames = new SkeletonRenderFrames();
+            foreach (DateTime timeStamp in skeletonFrames.FramesTimeStamps)
+            {
+                if (timeStamp.CompareTo(startTime) >= 0 && timeStamp.CompareTo(endTime) <= 0)
+                {
+                    frames.Add(timeStamp, skeletonFrames[timeStamp]);
+                }
+            }
+
+            return frames;
+        }
+        
         public Bitmap GetLatestImage()
         {
             DateTime mostRecent = skeletonFrames.MostRecentFrameTime;
