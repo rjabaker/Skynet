@@ -13,7 +13,7 @@ namespace KinectUtilities.Gestures
         private SkeletonRenderFrames skeletonRenderFrames;
 
         private DateTime gestureStartTime;
-        private TimeSpan gestureDuration;
+        private DateTime gestureEndTime;
 
         private GestureBuilder.BuildStrategy buildStrategy;
 
@@ -21,13 +21,13 @@ namespace KinectUtilities.Gestures
 
         #region Constructors
 
-        public GestureBuilderParameters(IGesture gesture, SkeletonRenderFrames skeletonRenderFrames, DateTime gestureStartTime, TimeSpan gestureDuration, GestureBuilder.BuildStrategy buildStrategy)
+        public GestureBuilderParameters(IGesture gesture, SkeletonRenderFrames skeletonRenderFrames, DateTime gestureStartTime, DateTime gestureEndTime, GestureBuilder.BuildStrategy buildStrategy)
         {
             this.gesture = gesture;
             this.skeletonRenderFrames = skeletonRenderFrames;
 
             this.gestureStartTime = gestureStartTime;
-            this.gestureDuration = gestureDuration;
+            this.gestureEndTime = gestureEndTime;
 
             this.buildStrategy = buildStrategy;
         }
@@ -57,11 +57,11 @@ namespace KinectUtilities.Gestures
                 return gestureStartTime;
             }
         }
-        public TimeSpan GestureDuration
+        public DateTime GestureEndTime
         {
             get
             {
-                return gestureDuration;
+                return gestureEndTime;
             }
         }
         public GestureBuilder.BuildStrategy BuildStrategy

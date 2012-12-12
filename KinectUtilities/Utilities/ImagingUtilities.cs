@@ -11,6 +11,7 @@ namespace KinectUtilities
         #region Delegates
 
         public delegate void ImageRenderedEventHandler(Bitmap image, DateTime timeStamp);
+        public delegate void ImageRenderingCompleteEventHandler(DateTime timeStamp);
 
         #endregion
 

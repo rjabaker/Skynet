@@ -7,7 +7,7 @@ namespace KinectUtilities
 {
 	public partial class RenderCanvas
 	{
-        public enum CanvasMode
+        public enum Mode
         {
             Firing = 1,
             Listening = 2,

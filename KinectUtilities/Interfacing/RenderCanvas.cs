@@ -21,6 +21,7 @@ namespace KinectUtilities
         #region Events
 
         public event ImagingUtilities.ImageRenderedEventHandler ImageRendered;
+        public event ImagingUtilities.ImageRenderingCompleteEventHandler ReplayCanvasComplete;
 
         #endregion
 
@@ -30,8 +31,8 @@ namespace KinectUtilities
 
         private SkeletonRenderFrames skeletonFrames;
         private TimeSpan renderDuration;
-        private CanvasMode canvasMode;
-        private CanvasMode previousCanvasMode;
+        private Mode canvasMode;
+        private Mode previousCanvasMode;
 
         #endregion
 
@@ -41,8 +42,8 @@ namespace KinectUtilities
         {
             this.skeletonFrames = new SkeletonRenderFrames();
             this.renderDuration = renderDuration;
-            this.canvasMode = CanvasMode.ListeningAndFiring;
-            this.previousCanvasMode = CanvasMode.ListeningAndFiring;
+            this.canvasMode = Mode.ListeningAndFiring;
+            this.previousCanvasMode = Mode.ListeningAndFiring;
         }
 
         #endregion
@@ -55,6 +56,42 @@ namespace KinectUtilities
             {
                 return renderDuration;
             }
+            set
+            {
+                renderDuration = value;
+            }
+        }
+        public Mode CanvasMode
+        {
+            get
+            {
+                return canvasMode;
+            }
+            set
+            {
+                SetCanvasMode(value);
+            }
+        }
+        public DateTime MemoryStartTime
+        {
+            get
+            {
+                return skeletonFrames.FramesTimeStamps.First();
+            }
+        }
+        public DateTime MemoryEndTime
+        {
+            get
+            {
+                return skeletonFrames.FramesTimeStamps.Last();
+            }
+        }
+        public List<DateTime> FramesTimeStamps
+        {
+            get
+            {
+                return skeletonFrames.FramesTimeStamps;
+            }
         }
 
         #endregion
@@ -63,7 +100,7 @@ namespace KinectUtilities
 
         public void SkeletonFrameCaptured(List<Skeleton> skeletons, DateTime timeStamp)
         {
-            if (canvasMode != CanvasMode.Listening || canvasMode != CanvasMode.ListeningAndFiring) return;
+            if (canvasMode != Mode.Listening || canvasMode != Mode.ListeningAndFiring) return;
 
             List<SkeletonRenderFrame> capturedFrames = new List<SkeletonRenderFrame>();
 
@@ -78,7 +115,7 @@ namespace KinectUtilities
         }
         public void SkeletonFrameCaptured(List<Skeleton> skeletons, Bitmap bitmap, DateTime timeStamp)
         {
-            if (canvasMode != CanvasMode.Listening && canvasMode != CanvasMode.ListeningAndFiring) return;
+            if (canvasMode != Mode.Listening && canvasMode != Mode.ListeningAndFiring) return;
 
             if (bitmap == null)
             {
@@ -96,12 +133,12 @@ namespace KinectUtilities
             }
 
             UpdateSkeletonFrames(capturedFrames, timeStamp);
-            if (canvasMode == CanvasMode.Firing || canvasMode == CanvasMode.ListeningAndFiring) ImageRendered(bitmap, timeStamp);
+            if (canvasMode == Mode.Firing || canvasMode == Mode.ListeningAndFiring) ImageRendered(bitmap, timeStamp);
         }
 
         public void ReplayCanvas()
         {
-            SetCanvasMode(CanvasMode.Firing);
+            SetCanvasMode(Mode.Firing);
 
             lock (canvasPlayerLock)
             {
@@ -136,13 +173,13 @@ namespace KinectUtilities
 
         public void SaveCanvasFrames(string filename)
         {
-            SetCanvasMode(CanvasMode.Stopped);
+            SetCanvasMode(Mode.Stopped);
             KinectSerializer.SerializeObject<SkeletonRenderFrames>(filename, skeletonFrames);
             RevertCanvasMode();
         }
         public void LoadCanvasFrames(string filename)
         {
-            SetCanvasMode(CanvasMode.Stopped);
+            SetCanvasMode(Mode.Stopped);
             skeletonFrames = KinectSerializer.DeserializeObject<SkeletonRenderFrames>(filename);
             RevertCanvasMode();
         }
@@ -163,17 +200,9 @@ namespace KinectUtilities
             {
                 skeletonFrames.Add(timeStamp, capturedFrames);
             }
-
-            if (skeletonFrames.Count == 290)
-            {
-                // RBakerFlag -> TESTCODE! REMOVE ASAP!
-                Gestures.GestureBuilder b = new Gestures.GestureBuilder();
-                Gestures.GestureBuilderParameters p = new Gestures.GestureBuilderParameters(null, skeletonFrames, skeletonFrames.FramesTimeStamps.First(), TimeSpan.FromSeconds(7), Gestures.GestureBuilder.BuildStrategy.StandardTolerance);
-                b.BuildMovingGestureTree(p);
-            }
         }
 
-        private void SetCanvasMode(CanvasMode mode)
+        private void SetCanvasMode(Mode mode)
         {
             previousCanvasMode = canvasMode;
             canvasMode = mode;
@@ -193,7 +222,11 @@ namespace KinectUtilities
         }
         private void canvasPlayer_PlayerFinished()
         {
+            long ticks = System.Diagnostics.Stopwatch.GetTimestamp();
+            DateTime timeStamp = DateTimeUtilities.ToDateTime(ticks);
+
             RevertCanvasMode();
+            ReplayCanvasComplete(timeStamp);
         }
 
         #endregion

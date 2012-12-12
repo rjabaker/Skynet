@@ -116,35 +116,6 @@ namespace KinectUtilities.Gestures
             return DoesSkeletonContainGesture(requiredJoints);
         }
 
-
-        public void CaptureGestureTESTCODE(Skeleton skeleton)
-        {
-            // RBakerFlag -> THIS IS TEST CODE!
-            ConnectedJoint a = new ConnectedJoint(skeleton.Joints[JointType.ShoulderRight].JointType, 1);
-            ConnectedJoint b = new ConnectedJoint(skeleton.Joints[JointType.ElbowRight].JointType, 2);
-            ConnectedJoint c = new ConnectedJoint(skeleton.Joints[JointType.WristRight].JointType, 3);
-            ConnectedJoint d = new ConnectedJoint(skeleton.Joints[JointType.HandRight].JointType, 4);
-
-            a.NextJoint = b;
-            b.NextJoint = c;
-            c.NextJoint = d;
-            d.NextJoint = null;
-
-            a.AddChildJointAngleRule(skeleton.Joints[JointType.ShoulderRight], skeleton.Joints[JointType.ElbowRight], b, 0.1);
-            a.AddChildJointAngleRule(skeleton.Joints[JointType.ShoulderRight], skeleton.Joints[JointType.WristRight], c, 0.1);
-            a.AddChildJointAngleRule(skeleton.Joints[JointType.ShoulderRight], skeleton.Joints[JointType.HandRight], d, 0.1);
-
-            b.AddChildJointAngleRule(skeleton.Joints[JointType.ElbowRight], skeleton.Joints[JointType.WristRight], c, 0.1);
-            b.AddChildJointAngleRule(skeleton.Joints[JointType.ElbowRight], skeleton.Joints[JointType.HandRight], d, 0.1);
-
-            c.AddChildJointAngleRule(skeleton.Joints[JointType.WristRight], skeleton.Joints[JointType.HandRight], d, 0.1);
-
-            connectedJoints.Add(a);
-            connectedJoints.Add(b);
-            connectedJoints.Add(c);
-            connectedJoints.Add(d);
-        }
-
         public bool StillActive(TimeSpan currentExecutionTime)
         {
             return executed && currentExecutionTime <= maxDeltaTime && currentExecutionTime >= minDeltaTime;

@@ -17,8 +17,10 @@ namespace KinectUtilities.Gestures
             private GestureBuilderParameters parameters;
 
             private DateTime gestureStartDateTime;
+            private DateTime gestureEndDateTime;
             private TimeSpan captureTimeTolerance;
             private TimeSpan gestureDuration;
+            private SkeletonRenderFrames rawFramesCapture;
             private SkeletonRenderFrames framesCapture;
 
             #endregion
@@ -31,8 +33,10 @@ namespace KinectUtilities.Gestures
                 this.parameters = parameters;
 
                 this.gestureStartDateTime = DateTime.MinValue;
+                this.gestureEndDateTime = DateTime.MinValue;
                 this.captureTimeTolerance = TimeSpan.Zero;
                 this.gestureDuration = TimeSpan.Zero;
+                this.rawFramesCapture = new SkeletonRenderFrames();
                 this.framesCapture = new SkeletonRenderFrames();
             }
 
@@ -115,15 +119,32 @@ namespace KinectUtilities.Gestures
 
             private void CalculateBuildParameters()
             {
+                CalculateFramesInInterval();
                 CalculateGestureStartDateTime();
                 CalculateGestureDuration();
                 CalculateTotalFramesCapture();
                 CalculateCaptureTimeTolerance();
             }
+            private void CalculateFramesInInterval()
+            {
+                // Build the rawFramesCapture so that it only contains those frames within the designated interval.
+                foreach (DateTime timeStamp in parameters.SkeletonRenderFrames.FramesTimeStamps)
+                {
+                    if (timeStamp.CompareTo(parameters.GestureStartTime) >= 0 && timeStamp.CompareTo(parameters.GestureEndTime) <= 0)
+                    {
+                        rawFramesCapture.Add(timeStamp, parameters.SkeletonRenderFrames[timeStamp]);
+                    }
+                }
+            }
             private void CalculateGestureStartDateTime()
             {
-                gestureStartDateTime = parameters.SkeletonRenderFrames.FramesTimeStamps.Count > 0 ?
-                    parameters.SkeletonRenderFrames.FramesTimeStamps.First() : DateTime.MinValue;
+                gestureStartDateTime = rawFramesCapture.FramesTimeStamps.Count > 0 ?
+                    rawFramesCapture.FramesTimeStamps.First() : DateTime.MinValue;
+            }
+            private void CalculateGestureEndDateTime()
+            {
+                gestureEndDateTime = rawFramesCapture.FramesTimeStamps.Count > 0 ?
+                    rawFramesCapture.FramesTimeStamps.Last() : DateTime.MinValue;
             }
             private void CalculateCaptureTimeTolerance()
             {
@@ -133,7 +154,7 @@ namespace KinectUtilities.Gestures
             {
                 if (parameters.SkeletonRenderFrames.Count > 0)
                 {
-                    int interval = DateTimeUtilities.DifferenceInMilliseconds(parameters.SkeletonRenderFrames.FramesTimeStamps.First(), parameters.SkeletonRenderFrames.FramesTimeStamps.Last());
+                    int interval = DateTimeUtilities.DifferenceInMilliseconds(gestureStartDateTime, gestureEndDateTime);
                     gestureDuration = TimeSpan.FromMilliseconds(interval);
                 }
             }
@@ -149,12 +170,12 @@ namespace KinectUtilities.Gestures
                 TimeSpan intervalSpan = TimeSpan.Zero;
                 TimeSpan deltaFrameSpan;
 
-                foreach (DateTime timeStamp in parameters.SkeletonRenderFrames.FramesTimeStamps)
+                foreach (DateTime timeStamp in rawFramesCapture.FramesTimeStamps)
                 {
                     if (intervalSpan.Equals(TimeSpan.Zero)) oneSecondIntervalFrames = new SkeletonRenderFrames();
                     if (parameters.SkeletonRenderFrames[timeStamp].Count == 0) continue;
 
-                    oneSecondIntervalFrames.Add(timeStamp, parameters.SkeletonRenderFrames[timeStamp]);
+                    oneSecondIntervalFrames.Add(timeStamp, rawFramesCapture[timeStamp]);
                     deltaFrameSpan = TimeSpan.FromMilliseconds(DateTimeUtilities.DifferenceInMilliseconds(gestureStartDateTime, timeStamp));
                     intervalSpan = intervalSpan.Add(deltaFrameSpan);
 
@@ -179,12 +200,12 @@ namespace KinectUtilities.Gestures
                 else
                 {
                     int count = 0;
-                    foreach (DateTime timeStamp in parameters.SkeletonRenderFrames.FramesTimeStamps)
+                    foreach (DateTime timeStamp in rawFramesCapture.FramesTimeStamps)
                     {
                         if (framesCapture.Count == 0)
                         {
                             // Make sure first frame is always saved in capture.
-                            framesCapture.Add(timeStamp, parameters.SkeletonRenderFrames[timeStamp]);
+                            framesCapture.Add(timeStamp, rawFramesCapture[timeStamp]);
                             count = 0;
                             continue;
                         }
@@ -192,7 +213,7 @@ namespace KinectUtilities.Gestures
                         count += 1;
                         if (count > frameStep)
                         {
-                            framesCapture.Add(timeStamp, parameters.SkeletonRenderFrames[timeStamp]);
+                            framesCapture.Add(timeStamp, rawFramesCapture[timeStamp]);
                             count = 0;
                         }
                     }
