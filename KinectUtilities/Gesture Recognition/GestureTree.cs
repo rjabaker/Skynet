@@ -150,7 +150,7 @@ namespace KinectUtilities.Gestures
         }
         public bool FailedExecution(TimeSpan currentExecutionTime)
         {
-            return !executed && currentExecutionTime >= maxDeltaTime;
+            return !executed && currentExecutionTime > maxDeltaTime;
         }
         public bool NotActiveYet(TimeSpan currentExecutionTime)
         {
