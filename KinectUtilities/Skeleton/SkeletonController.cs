@@ -111,7 +111,7 @@ namespace KinectUtilities
 
         public void LoadTestGestures()
         {
-            MovingGestureTree movingGestureTree = KinectSerializer.DeserializeFromXml<MovingGestureTree>("C:\\Users\\Robert\\Documents\\GitHub\\docs\\files\\gesture bin\\gesture_3.xml");
+            MovingGestureTree movingGestureTree = KinectSerializer.DeserializeFromXml<MovingGestureTree>("C:\\Users\\Robert\\Documents\\GitHub\\docs\\files\\gesture bin\\gesture_7_half_wave.xml");
             gestureController.AddMovingGestureTree(movingGestureTree);
         }
 

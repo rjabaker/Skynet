@@ -22,5 +22,13 @@ namespace KinectUtilities
                 return Settings.GestureStandardToleranceParameters.Default.FramesPerSecondCapture;
             }
         }
+
+        public static int DeltaTimeMillisecondsTolerance
+        {
+            get
+            {
+                return Settings.GestureStandardToleranceParameters.Default.DeltaTimeMillisecondsTolerance;
+            }
+        }
     }
 }

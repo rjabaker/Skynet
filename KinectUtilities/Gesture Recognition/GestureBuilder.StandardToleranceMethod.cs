@@ -92,10 +92,11 @@ namespace KinectUtilities.Gestures
                 TimeSpan minDeltaTime = frameTime < captureTimeTolerance ? TimeSpan.Zero : frameTime.Subtract(captureTimeTolerance);
                 TimeSpan maxDeltaTime = frameTime.Add(captureTimeTolerance);
 
-                GestureTree headAndSpineTree = new GestureTree(
-                    SkeletonMiningUtilities.GetJointCollection(frame.Skeleton, SkeletonMiningUtilities.SkeletonJointCollection.HeadAndSpine),
-                    GestureStandardToleranceParameters.JointAngleTolerance, minDeltaTime, maxDeltaTime);
-                movingGestureTree.GestureTrees.Add(headAndSpineTree);
+                // RBakerFlag -> Ignore head and spine for now.
+                //GestureTree headAndSpineTree = new GestureTree(
+                //    SkeletonMiningUtilities.GetJointCollection(frame.Skeleton, SkeletonMiningUtilities.SkeletonJointCollection.HeadAndSpine),
+                //    GestureStandardToleranceParameters.JointAngleTolerance, minDeltaTime, maxDeltaTime);
+                //movingGestureTree.GestureTrees.Add(headAndSpineTree);
 
                 GestureTree rightArmTree = new GestureTree(
                     SkeletonMiningUtilities.GetJointCollection(frame.Skeleton, SkeletonMiningUtilities.SkeletonJointCollection.RightArm),
@@ -107,15 +108,16 @@ namespace KinectUtilities.Gestures
                     GestureStandardToleranceParameters.JointAngleTolerance, minDeltaTime, maxDeltaTime);
                 movingGestureTree.GestureTrees.Add(leftArmTree);
 
-                GestureTree rightLegTree = new GestureTree(
-                   SkeletonMiningUtilities.GetJointCollection(frame.Skeleton, SkeletonMiningUtilities.SkeletonJointCollection.RightLeg),
-                   GestureStandardToleranceParameters.JointAngleTolerance, minDeltaTime, maxDeltaTime);
-                movingGestureTree.GestureTrees.Add(rightLegTree);
+                // RBakerFlag -> Ignore legs for now.
+                //GestureTree rightLegTree = new GestureTree(
+                //   SkeletonMiningUtilities.GetJointCollection(frame.Skeleton, SkeletonMiningUtilities.SkeletonJointCollection.RightLeg),
+                //   GestureStandardToleranceParameters.JointAngleTolerance, minDeltaTime, maxDeltaTime);
+                //movingGestureTree.GestureTrees.Add(rightLegTree);
 
-                GestureTree leftLegTree = new GestureTree(
-                   SkeletonMiningUtilities.GetJointCollection(frame.Skeleton, SkeletonMiningUtilities.SkeletonJointCollection.LeftLeg),
-                   GestureStandardToleranceParameters.JointAngleTolerance, minDeltaTime, maxDeltaTime);
-                movingGestureTree.GestureTrees.Add(leftLegTree);
+                //GestureTree leftLegTree = new GestureTree(
+                //   SkeletonMiningUtilities.GetJointCollection(frame.Skeleton, SkeletonMiningUtilities.SkeletonJointCollection.LeftLeg),
+                //   GestureStandardToleranceParameters.JointAngleTolerance, minDeltaTime, maxDeltaTime);
+                //movingGestureTree.GestureTrees.Add(leftLegTree);
             }
 
             private void CalculateBuildParameters()
@@ -165,7 +167,9 @@ namespace KinectUtilities.Gestures
             }
             private void CalculateCaptureTimeTolerance()
             {
-                captureTimeTolerance = TimeSpan.FromMilliseconds(gestureDuration.Milliseconds / framesCapture.Count);
+                // RBakerFlag -> Use standard tolerance.
+                captureTimeTolerance = TimeSpan.FromMilliseconds(GestureStandardToleranceParameters.DeltaTimeMillisecondsTolerance);
+                // captureTimeTolerance = TimeSpan.FromMilliseconds(gestureDuration.Milliseconds / framesCapture.Count);
             }
             private void CalculateGestureDuration()
             {

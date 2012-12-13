@@ -46,6 +46,7 @@ namespace KinectUtilities.Gestures
 
         public void AddMovingGestureTree(MovingGestureTree movingGestureTree)
         {
+            movingGestureTree.CalculateRuntimeParameters();
             movingGestureTrees.Add(movingGestureTree);
             movingGestureTree.GestureCaptured += new GestureUtilities.GestureCapturedEventHandler(movingGestureTree_GestureCaptured);
         }

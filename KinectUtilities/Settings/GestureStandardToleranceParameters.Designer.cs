@@ -34,10 +34,19 @@ namespace KinectUtilities.Settings {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("6")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
         public double FramesPerSecondCapture {
             get {
                 return ((double)(this["FramesPerSecondCapture"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int DeltaTimeMillisecondsTolerance {
+            get {
+                return ((int)(this["DeltaTimeMillisecondsTolerance"]));
             }
         }
     }

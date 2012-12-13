@@ -171,8 +171,8 @@ namespace KinectUtilities
             GestureBuilderParameters parameters = new GestureBuilderParameters(gesture, renderCanvas.SkeletonRenderFrames, start, end, GestureBuilder.BuildStrategy.StandardTolerance);
             GestureBuilder builder = new GestureBuilder();
             movingGestureTree = builder.BuildMovingGestureTree(parameters);
-            renderCanvas.SaveCanvasFrames("C:\\Users\\Robert\\Documents\\GitHub\\docs\\files\\render bin\\gesture_3.xml");
-            KinectSerializer.SerializeToXml<MovingGestureTree>(movingGestureTree, "C:\\Users\\Robert\\Documents\\GitHub\\docs\\files\\gesture bin\\gesture_3.xml");
+            renderCanvas.SaveCanvasFrames("C:\\Users\\Robert\\Documents\\GitHub\\docs\\files\\render bin\\gesture_8_half_wave.xml");
+            KinectSerializer.SerializeToXml<MovingGestureTree>(movingGestureTree, "C:\\Users\\Robert\\Documents\\GitHub\\docs\\files\\gesture bin\\gesture_7_half_wave.xml");
         }
 
         #endregion

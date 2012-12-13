@@ -28,6 +28,7 @@ namespace KinectUtilities.Gestures
 
         private TimeSpan currentExecutionTime;
         private TimeSpan minimumGestureDuration;
+        private TimeSpan maximumGestureDuration;
         private DateTime currentExecutionDateTime;
 
         #endregion
@@ -43,6 +44,7 @@ namespace KinectUtilities.Gestures
 
             this.currentExecutionTime = TimeSpan.Zero;
             this.minimumGestureDuration = TimeSpan.Zero;
+            this.maximumGestureDuration = TimeSpan.Zero;
             this.currentExecutionDateTime = DateTime.MinValue;
         }
 
@@ -81,6 +83,20 @@ namespace KinectUtilities.Gestures
 
         #region Public Methods
 
+        public void CalculateRuntimeParameters()
+        {
+            TimeSpan maxMinimumDuration = TimeSpan.MinValue;
+            TimeSpan maxMaximumDuration = TimeSpan.MinValue;
+            foreach (GestureTree tree in gestureTrees)
+            {
+                if (tree.MinDeltaTime > maxMinimumDuration) maxMinimumDuration = tree.MinDeltaTime;
+                if (tree.MaxDeltaTime > maxMaximumDuration) maxMaximumDuration = tree.MaxDeltaTime;
+            }
+
+            minimumGestureDuration = maxMinimumDuration;
+            maximumGestureDuration = maxMaximumDuration;
+        }
+
         public void ProcessSkeletonForGesture(Skeleton skeleton, DateTime timeStamp)
         {
             UpdateTiming(timeStamp);
@@ -96,9 +112,13 @@ namespace KinectUtilities.Gestures
         {
             currentExecutionTime = currentExecutionDateTime == DateTime.MinValue ? TimeSpan.Zero :
                 TimeSpan.FromMilliseconds(DateTimeUtilities.DifferenceInMilliseconds(currentExecutionDateTime, timeStamp));
+            if (currentExecutionTime > maximumGestureDuration)
+            {
+                ResetExecutionParameters();
+            }
+
             currentExecutionDateTime = timeStamp;
         }
-
         private void CheckActiveGesturesForExecution(Skeleton skeleton)
         {
             foreach (GestureTree gestureTree in activeGestureTrees)
@@ -176,7 +196,6 @@ namespace KinectUtilities.Gestures
 
             return activeGestureTreesAllExecuted && latestGestureTreeInActiveGestureTrees;
         }
-
         private void SetActiveGestureTrees()
         {
             // Assumes this gestureTrees collection is sorted.
