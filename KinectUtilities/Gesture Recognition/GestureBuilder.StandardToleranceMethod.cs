@@ -79,7 +79,7 @@ namespace KinectUtilities.Gestures
             {
                 foreach (DateTime timeStamp in framesCapture.FramesTimeStamps)
                 {
-                    // Default to first frame.
+                    // RBakerFlag -> Only supports single skeleton capture. Default to first frame.
                     if (framesCapture[timeStamp].Count > 0) BuildFrame(framesCapture[timeStamp][0]);
                 }
             }
@@ -87,7 +87,8 @@ namespace KinectUtilities.Gestures
             {
                 // Converts the frame into a collection of GestureTrees and adds it to the MovingGestureTree.
 
-                TimeSpan frameTime = TimeSpan.FromMilliseconds(DateTimeUtilities.DifferenceInMilliseconds(gestureStartDateTime, frame.TimeStamp));
+                int milliseconds = DateTimeUtilities.DifferenceInMilliseconds(gestureStartDateTime, frame.TimeStamp);
+                TimeSpan frameTime = TimeSpan.FromMilliseconds(milliseconds);
                 TimeSpan minDeltaTime = frameTime < captureTimeTolerance ? TimeSpan.Zero : frameTime.Subtract(captureTimeTolerance);
                 TimeSpan maxDeltaTime = frameTime.Add(captureTimeTolerance);
 
@@ -121,9 +122,12 @@ namespace KinectUtilities.Gestures
             {
                 CalculateFramesInInterval();
                 CalculateGestureStartDateTime();
+                CalculateGestureEndDateTime();
                 CalculateGestureDuration();
                 CalculateTotalFramesCapture();
                 CalculateCaptureTimeTolerance();
+                UpdateGestureStartDateTime();
+                UpdateGestureEndDateTime();
             }
             private void CalculateFramesInInterval()
             {
@@ -145,6 +149,19 @@ namespace KinectUtilities.Gestures
             {
                 gestureEndDateTime = rawFramesCapture.FramesTimeStamps.Count > 0 ?
                     rawFramesCapture.FramesTimeStamps.Last() : DateTime.MinValue;
+            }
+            private void UpdateGestureStartDateTime()
+            {
+                // It is possible that the first frame is not included (if it has no skeletons), so the old start date time
+                // is invalid. Update.
+                gestureStartDateTime = framesCapture.FramesTimeStamps.Count > 0 ?
+                    framesCapture.FramesTimeStamps.First() : DateTime.MinValue;
+            }
+            private void UpdateGestureEndDateTime()
+            {
+                // This value is variable. Need to update after the collection is built.
+                gestureEndDateTime = framesCapture.FramesTimeStamps.Count > 0 ?
+                    framesCapture.FramesTimeStamps.Last() : DateTime.MinValue;
             }
             private void CalculateCaptureTimeTolerance()
             {
@@ -185,6 +202,9 @@ namespace KinectUtilities.Gestures
                         intervalSpan = TimeSpan.Zero;
                     }
                 }
+
+                // In case the last interval was not caught, capture it.
+                if (oneSecondIntervalFrames.Count != 0) UpdateFramesCapture(oneSecondIntervalFrames);
             }
             private void UpdateFramesCapture(SkeletonRenderFrames oneSecondIntervalFrames)
             {

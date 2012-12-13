@@ -26,6 +26,7 @@ namespace KinectUtilities
         private KinectSensor sensor;
         private SkeletonRenderer skeletonRenderer;
         private SkeletonRecognizer skeletonRecognizer;
+        private GestureController gestureController;
 
         private List<SkeletonCapturingFunction> capturingFunctions;
         private int numberOfSkeletonsToRecognize;
@@ -41,11 +42,14 @@ namespace KinectUtilities
             this.sensor = sensor;
             this.skeletonRenderer = new SkeletonRenderer(this.sensor);
             this.skeletonRecognizer = new SkeletonRecognizer();
+            this.gestureController = new GestureController();
 
             this.capturingFunctions = new List<SkeletonCapturingFunction>();
             this.numberOfSkeletonsToRecognize = 1;
 
             this.defaultBitmap = ImagingUtilities.CreateDefaultBitmap(new Size(this.sensor.ColorStream.FrameWidth, this.sensor.ColorStream.FrameHeight), Color.Black);
+
+            ConnectToUtilities();
         }
 
         #endregion
@@ -95,19 +99,30 @@ namespace KinectUtilities
             List<Skeleton> skeletons = RecognizeSkeletons(skeletonData);
 
             if (capturingFunctions.Contains(SkeletonCapturingFunction.SkeletonRendering)) RenderSkeletons(skeletons, timeStamp);
-            if (capturingFunctions.Contains(SkeletonCapturingFunction.GestureCapturing)) CaptureGestures(skeletons);
+            if (capturingFunctions.Contains(SkeletonCapturingFunction.GestureCapturing)) CaptureGestures(skeletons, timeStamp);
         }
         public void CaptureSkeletonData(Skeleton[] skeletonData, ColorImageFrame imageFrame, DateTime timeStamp)
         {
             List<Skeleton> skeletons = RecognizeSkeletons(skeletonData);
 
             if (capturingFunctions.Contains(SkeletonCapturingFunction.SkeletonRendering)) RenderSkeletons(skeletons, imageFrame, timeStamp);
-            if (capturingFunctions.Contains(SkeletonCapturingFunction.GestureCapturing)) CaptureGestures(skeletons);
+            if (capturingFunctions.Contains(SkeletonCapturingFunction.GestureCapturing)) CaptureGestures(skeletons, timeStamp);
+        }
+
+        public void LoadTestGestures()
+        {
+            MovingGestureTree movingGestureTree = KinectSerializer.DeserializeFromXml<MovingGestureTree>("C:\\Users\\Robert\\Documents\\GitHub\\docs\\files\\gesture bin\\gesture_3.xml");
+            gestureController.AddMovingGestureTree(movingGestureTree);
         }
 
         #endregion
 
         #region Private Methods
+
+        private void ConnectToUtilities()
+        {
+            gestureController.GestureCaptured += new KinectEventUtilities.GestureCapturedEventHandler(gestureController_GestureCaptured);
+        }
 
         private void RenderSkeletons(List<Skeleton> skeletons, DateTime timeStamp)
         {
@@ -139,25 +154,16 @@ namespace KinectUtilities
             if (bitmap != null) SkeletonRendered(skeletons, bitmap, timeStamp);
         }
 
-        private void CaptureGestures(List<Skeleton> skeletons)
+        private void CaptureGestures(List<Skeleton> skeletons, DateTime timeStamp)
         {
             foreach (Skeleton skeleton in skeletons)
             {
-                CaptureSkeletonGestures(skeleton);
+                CaptureSkeletonGestures(skeleton, timeStamp);
             }
         }
-        private void CaptureSkeletonGestures(Skeleton skeleton)
+        private void CaptureSkeletonGestures(Skeleton skeleton, DateTime timeStamp)
         {
-            //List<Joint> list = new List<Joint>();
-            //list.Add(skeleton.Joints[JointType.ShoulderRight]);
-            //list.Add(skeleton.Joints[JointType.ElbowRight]);
-            //list.Add(skeleton.Joints[JointType.WristRight]);
-            //list.Add(skeleton.Joints[JointType.HandRight]);
-
-            //GestureTree tree = KinectSerializer.DeserializeFromXml<GestureTree>("C:\\Users\\Robert\\Documents\\GitHub\\docs\\design\\The Eye\\Phase 1\\Files\\Gesture Bin\\flex.xml");
-            //bool gestureCaptured = tree.DoesSkeletonContainGesture(list);
-
-            //if(gestureCaptured) gestureCapturedEventHandler(null);
+            gestureController.ProcessSkeletonForGesture(skeleton, timeStamp);
         }
 
         private List<Skeleton> RecognizeSkeletons(Skeleton[] skeletonData)
@@ -187,6 +193,15 @@ namespace KinectUtilities
             }
 
             return recognizedSkeletons;
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        private void gestureController_GestureCaptured(IGesture gesture, DateTime timeStamp)
+        {
+            GestureCaptured(gesture, timeStamp);
         }
 
         #endregion

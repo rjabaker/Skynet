@@ -30,6 +30,8 @@ namespace KinectUtilities
         private bool recording;
         private bool replaying;
 
+        private MovingGestureTree movingGestureTree;
+
         #endregion
 
         #region Constructors
@@ -160,6 +162,19 @@ namespace KinectUtilities
             }
         }
 
+        private void BuildMovingGestureTree()
+        {
+            IGesture gesture = null;
+            DateTime start = (DateTime)gestureStartTimeListBox.SelectedItem;
+            DateTime end = (DateTime)gestureEndTimeListBox.SelectedItem;
+
+            GestureBuilderParameters parameters = new GestureBuilderParameters(gesture, renderCanvas.SkeletonRenderFrames, start, end, GestureBuilder.BuildStrategy.StandardTolerance);
+            GestureBuilder builder = new GestureBuilder();
+            movingGestureTree = builder.BuildMovingGestureTree(parameters);
+            renderCanvas.SaveCanvasFrames("C:\\Users\\Robert\\Documents\\GitHub\\docs\\files\\render bin\\gesture_3.xml");
+            KinectSerializer.SerializeToXml<MovingGestureTree>(movingGestureTree, "C:\\Users\\Robert\\Documents\\GitHub\\docs\\files\\gesture bin\\gesture_3.xml");
+        }
+
         #endregion
 
         #region Event Handlers
@@ -233,6 +248,10 @@ namespace KinectUtilities
         {
             timeSpan = TimeSpan.FromSeconds((double)memoryTimeNumericTextBox.Value);
             renderCanvas.RenderDuration = timeSpan;
+        }
+        private void buildGestureButton_Click(object sender, EventArgs e)
+        {
+            BuildMovingGestureTree();
         }
 
         #endregion

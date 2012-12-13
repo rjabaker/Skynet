@@ -44,6 +44,7 @@
             this.gestureEndTimeListBox = new System.Windows.Forms.ListBox();
             this.label3 = new System.Windows.Forms.Label();
             this.replayIntervalButton = new System.Windows.Forms.Button();
+            this.buildGestureButton = new System.Windows.Forms.Button();
             this.gestureParametersGroupBox.SuspendLayout();
             this.frameCaptureControlGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.frameCapturePictureBox)).BeginInit();
@@ -52,6 +53,7 @@
             // 
             // gestureParametersGroupBox
             // 
+            this.gestureParametersGroupBox.Controls.Add(this.buildGestureButton);
             this.gestureParametersGroupBox.Controls.Add(this.label3);
             this.gestureParametersGroupBox.Controls.Add(this.gestureEndTimeListBox);
             this.gestureParametersGroupBox.Controls.Add(this.label2);
@@ -213,6 +215,16 @@
             this.replayIntervalButton.UseVisualStyleBackColor = true;
             this.replayIntervalButton.Click += new System.EventHandler(this.replayIntervalButton_Click);
             // 
+            // buildGestureButton
+            // 
+            this.buildGestureButton.Location = new System.Drawing.Point(326, 467);
+            this.buildGestureButton.Name = "buildGestureButton";
+            this.buildGestureButton.Size = new System.Drawing.Size(92, 31);
+            this.buildGestureButton.TabIndex = 7;
+            this.buildGestureButton.Text = "Build Gesture";
+            this.buildGestureButton.UseVisualStyleBackColor = true;
+            this.buildGestureButton.Click += new System.EventHandler(this.buildGestureButton_Click);
+            // 
             // GestureBuilderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -254,5 +266,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ListBox gestureEndTimeListBox;
         private System.Windows.Forms.Button replayIntervalButton;
+        private System.Windows.Forms.Button buildGestureButton;
     }
 }

@@ -127,13 +127,15 @@ namespace KinectUtilities
         private void sensor_AllFramesReadyForFullImageSkeletonRendering(object sender, AllFramesReadyEventArgs e)
         {
             if (sensorMode != SensorMode.FullImageSkeletonRendering) return;
-
+            
             ColorImageFrame imageFrame = e.OpenColorImageFrame();
             SkeletonFrame skeletonFrame = e.OpenSkeletonFrame();
             if (imageFrame != null && skeletonFrame != null)
             {
+                // Create new skeletonData array after capturing data to avoid modifying existing skeletons.
                 skeletonFrame.CopySkeletonDataTo(skeletonData);
-                skeletonController.CaptureSkeletonData(skeletonData, imageFrame);
+                skeletonController.CaptureSkeletonData(skeletonData, imageFrame, DateTimeUtilities.ToDateTime(skeletonFrame.Timestamp));
+                skeletonData = new Skeleton[this.sensor.SkeletonStream.FrameSkeletonArrayLength];
             }
 
         }
@@ -144,8 +146,10 @@ namespace KinectUtilities
             SkeletonFrame skeletonFrame = e.OpenSkeletonFrame();
             if (skeletonFrame != null)
             {
+                // Create new skeletonData array after capturing data to avoid modifying existing skeletons.
                 skeletonFrame.CopySkeletonDataTo(skeletonData);
-                skeletonController.CaptureSkeletonData(skeletonData);
+                skeletonController.CaptureSkeletonData(skeletonData, DateTimeUtilities.ToDateTime(skeletonFrame.Timestamp));
+                skeletonData = new Skeleton[this.sensor.SkeletonStream.FrameSkeletonArrayLength];
             }
         }
 

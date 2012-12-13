@@ -94,7 +94,8 @@ namespace KinectUtilities.Gestures
 
         private void UpdateTiming(DateTime timeStamp)
         {
-            currentExecutionTime = TimeSpan.FromMilliseconds(DateTimeUtilities.DifferenceInMilliseconds(currentExecutionDateTime, timeStamp));
+            currentExecutionTime = currentExecutionDateTime == DateTime.MinValue ? TimeSpan.Zero :
+                TimeSpan.FromMilliseconds(DateTimeUtilities.DifferenceInMilliseconds(currentExecutionDateTime, timeStamp));
             currentExecutionDateTime = timeStamp;
         }
 
@@ -117,6 +118,7 @@ namespace KinectUtilities.Gestures
                 else if (PassedAllExecutions())
                 {
                     GestureCaptured(gesture, currentExecutionDateTime);
+                    ResetExecutionParameters();
                 }
                 else
                 {
@@ -131,8 +133,8 @@ namespace KinectUtilities.Gestures
         private void ResetExecutionParameters()
         {
             currentExecutionTime = TimeSpan.Zero;
-            SetActiveGestureTrees();
             ResetGestureTrees();
+            SetActiveGestureTrees();
         }
         private void ResetGestureTrees()
         {

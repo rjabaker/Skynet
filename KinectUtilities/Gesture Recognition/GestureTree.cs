@@ -61,6 +61,34 @@ namespace KinectUtilities.Gestures
         }
 
         [XmlElement("MaxDeltaTime")]
+        public long XmlMaxDeltaTime
+        {
+            get
+            {
+                // Used exclusively for Xml.
+                return maxDeltaTime.Ticks;
+            }
+            set
+            {
+                maxDeltaTime = new TimeSpan(value);
+            }
+        }
+
+        [XmlElement("MinDeltaTime")]
+        public long XmlMinDeltaTime
+        {
+            get
+            {
+                // Used exclusively for Xml.
+                return minDeltaTime.Ticks;
+            }
+            set
+            {
+                minDeltaTime = new TimeSpan(value);
+            }
+        }
+
+        [XmlIgnore()]
         public TimeSpan MaxDeltaTime
         {
             get
@@ -73,7 +101,7 @@ namespace KinectUtilities.Gestures
             }
         }
 
-        [XmlElement("MinDeltaTime")]
+        [XmlIgnore()]
         public TimeSpan MinDeltaTime
         {
             get
@@ -118,7 +146,7 @@ namespace KinectUtilities.Gestures
 
         public bool StillActive(TimeSpan currentExecutionTime)
         {
-            return executed && currentExecutionTime <= maxDeltaTime && currentExecutionTime >= minDeltaTime;
+            return !executed && currentExecutionTime <= maxDeltaTime && currentExecutionTime >= minDeltaTime;
         }
         public bool FailedExecution(TimeSpan currentExecutionTime)
         {

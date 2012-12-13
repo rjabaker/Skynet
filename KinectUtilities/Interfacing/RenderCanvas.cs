@@ -93,6 +93,13 @@ namespace KinectUtilities
                 return skeletonFrames.FramesTimeStamps;
             }
         }
+        public SkeletonRenderFrames SkeletonRenderFrames
+        {
+            get
+            {
+                return skeletonFrames;
+            }
+        }
 
         #endregion
 

@@ -43,6 +43,8 @@ namespace WorkBench
 
             capturedLabel.Visible = false;
             sensor.SkeletonController.SkeletonCapturingFunctions.Add(SkeletonCapturingFunction.GestureCapturing);
+            sensor.SkeletonController.SkeletonCapturingFunctions.Add(SkeletonCapturingFunction.GestureCapturing);
+            sensor.SkeletonController.LoadTestGestures();
 
             GestureBuilderForm test = new GestureBuilderForm(sensor);
             test.Show();
