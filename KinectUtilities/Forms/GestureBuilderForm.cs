@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 
 using KinectUtilities.Gestures;
+using ToolBox.FileUtilities;
 
 namespace KinectUtilities
 {
@@ -24,6 +25,7 @@ namespace KinectUtilities
         #region Private Variables
 
         private RenderCanvas renderCanvas;
+        private SkeletonRenderer skeletonRenderer;
         private SmartKinectSensor sensor;
 
         private TimeSpan timeSpan;
@@ -42,11 +44,13 @@ namespace KinectUtilities
 
             this.sensor = sensor;
 
+            this.skeletonRenderer = new SkeletonRenderer(this.sensor.Sensor);
             this.timeSpan = TimeSpan.FromSeconds(10);
             this.renderCanvas = new RenderCanvas(timeSpan);
-            this.sensor.SkeletonController.SkeletonRendered += renderCanvas.SkeletonFrameCaptured;
+            this.skeletonRenderer.SkeletonRendered += renderCanvas.SkeletonFrameCaptured;
             this.renderCanvas.ImageRendered += new ImagingUtilities.ImageRenderedEventHandler(renderCanvas_ImageRendered);
             this.renderCanvas.ReplayCanvasComplete += new ImagingUtilities.ImageRenderingCompleteEventHandler(renderCanvas_ReplayCanvasComplete);
+            this.sensor.SkeletonController.SkeletonCapturingFunctions.Add(this.skeletonRenderer);
 
             this.recording = true;
             this.replaying = false;
@@ -172,7 +176,7 @@ namespace KinectUtilities
             GestureBuilder builder = new GestureBuilder();
             movingGestureTree = builder.BuildMovingGestureTree(parameters);
             renderCanvas.SaveCanvasFrames("C:\\Users\\Robert\\Documents\\GitHub\\docs\\files\\render bin\\gesture_8_half_wave.xml");
-            KinectSerializer.SerializeToXml<MovingGestureTree>(movingGestureTree, "C:\\Users\\Robert\\Documents\\GitHub\\docs\\files\\gesture bin\\gesture_7_half_wave.xml");
+            Serializer.SerializeToXml<MovingGestureTree>(movingGestureTree, "C:\\Users\\Robert\\Documents\\GitHub\\docs\\files\\gesture bin\\gesture_7_half_wave.xml");
         }
 
         #endregion
@@ -240,7 +244,7 @@ namespace KinectUtilities
         }
         private void GestureBuilderForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            this.sensor.SkeletonController.SkeletonRendered -= renderCanvas.SkeletonFrameCaptured;
+            this.skeletonRenderer.SkeletonRendered -= renderCanvas.SkeletonFrameCaptured;
             this.renderCanvas.ImageRendered -= new ImagingUtilities.ImageRenderedEventHandler(renderCanvas_ImageRendered);
             this.renderCanvas.ReplayCanvasComplete += new ImagingUtilities.ImageRenderingCompleteEventHandler(renderCanvas_ReplayCanvasComplete);
         }

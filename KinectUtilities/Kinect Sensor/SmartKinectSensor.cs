@@ -47,6 +47,13 @@ namespace KinectUtilities
 
         #region Properties
 
+        public KinectSensor Sensor
+        {
+            get
+            {
+                return sensor;
+            }
+        }
         public SkeletonController SkeletonController
         {
             get
@@ -100,10 +107,10 @@ namespace KinectUtilities
             this.sensor.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(sensor_SkeletonFrameReadyForSkeletonRendering);
             this.sensorMode = SensorMode.SkeletonRendering;
 
-            if (!this.skeletonController.SkeletonCapturingFunctions.Contains(SkeletonCapturingFunction.SkeletonRendering))
-            {
-                this.skeletonController.SkeletonCapturingFunctions.Add(SkeletonCapturingFunction.SkeletonRendering);
-            }
+            //if (!this.skeletonController.SkeletonCapturingFunctions.Contains(SkeletonCapturingFunction.SkeletonRendering))
+            //{
+            //    this.skeletonController.SkeletonCapturingFunctionsa.Add(SkeletonCapturingFunction.SkeletonRendering);
+            //}
         }
         private void EnableFullImageSkeletonRendering()
         {
@@ -114,10 +121,10 @@ namespace KinectUtilities
             this.sensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(sensor_AllFramesReadyForFullImageSkeletonRendering);
             this.sensorMode = SensorMode.FullImageSkeletonRendering;
 
-            if (!this.skeletonController.SkeletonCapturingFunctions.Contains(SkeletonCapturingFunction.SkeletonRendering))
-            {
-                this.skeletonController.SkeletonCapturingFunctions.Add(SkeletonCapturingFunction.SkeletonRendering);
-            }
+            //if (!this.skeletonController.SkeletonCapturingFunctionsa.Contains(SkeletonCapturingFunction.SkeletonRendering))
+            //{
+            //    this.skeletonController.SkeletonCapturingFunctionsa.Add(SkeletonCapturingFunction.SkeletonRendering);
+            //}
         }
 
         #endregion

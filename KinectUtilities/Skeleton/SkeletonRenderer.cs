@@ -10,11 +10,20 @@ using Microsoft.Kinect;
 
 namespace KinectUtilities
 {
-    public class SkeletonRenderer
+    public class SkeletonRenderer : ISkeletonCapturingFunction
     {
+        #region Events
+
+        public event KinectEventUtilities.SkeletonRenderedEventHandler SkeletonRendered;
+
+        #endregion
+
         #region Private Variables
 
+        private readonly object thisLock = new object();
+
         private KinectSensor sensor;
+        private Bitmap defaultBitmap;
 
         #endregion
 
@@ -23,12 +32,29 @@ namespace KinectUtilities
         public SkeletonRenderer(KinectSensor sensor)
         {
             this.sensor = sensor;
+            this.defaultBitmap = ImagingUtilities.CreateDefaultBitmap(new Size(sensor.ColorStream.FrameWidth, sensor.ColorStream.FrameHeight), Color.Black);
+        }
+        public SkeletonRenderer(KinectSensor sensor, Bitmap defaultBitmap)
+        {
+            this.sensor = sensor;
+            this.defaultBitmap = defaultBitmap;
         }
 
         #endregion
 
         #region Properties
 
+        public Bitmap DefaultBitmap
+        {
+            get
+            {
+                return defaultBitmap;
+            }
+            set
+            {
+                defaultBitmap = value;
+            }
+        }
         public KinectSensor Sensor
         {
             get
@@ -40,10 +66,33 @@ namespace KinectUtilities
                 sensor = value;
             }
         }
+        public object Lock
+        {
+            get
+            {
+                return thisLock;
+            }
+        }
 
         #endregion
 
         #region Public Methods
+
+        public void Execute(object data)
+        {
+            Execute((SkeletonCaptureData)data);
+        }
+        public void Execute(SkeletonCaptureData data)
+        {
+            if (data.ImageFrame == null)
+            {
+                RenderSkeletons(data.Skeletons, data.TimeStamp);
+            }
+            else
+            {
+                RenderSkeletons(data.Skeletons, data.ImageFrame, data.TimeStamp);
+            }
+        }
 
         public Bitmap RenderSkeleton(Bitmap bitmap, Skeleton skeleton)
         {
@@ -81,6 +130,36 @@ namespace KinectUtilities
         #endregion
 
         #region Private Methods
+
+        private void RenderSkeletons(List<Skeleton> skeletons, DateTime timeStamp)
+        {
+            Bitmap bitmap = (Bitmap)defaultBitmap.Clone();
+
+            foreach (Skeleton skeleton in skeletons)
+            {
+                bitmap = RenderSkeleton(bitmap, skeleton);
+            }
+
+            if (SkeletonRendered != null) SkeletonRendered(skeletons, bitmap, timeStamp);
+        }
+        private void RenderSkeletons(List<Skeleton> skeletons, ColorImageFrame imageFrame, DateTime timeStamp)
+        {
+            Bitmap bitmap = null;
+
+            foreach (Skeleton skeleton in skeletons)
+            {
+                if (bitmap == null)
+                {
+                    bitmap = RenderSkeleton(bitmap, skeleton);
+                }
+                else
+                {
+                    bitmap = RenderSkeleton(imageFrame, skeleton);
+                }
+            }
+
+            if (bitmap != null) SkeletonRendered(skeletons, bitmap, timeStamp);
+        }
 
         private void DrawSkeleton(Skeleton skeleton, Graphics graphics)
         {

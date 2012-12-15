@@ -7,11 +7,9 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
-using KinectUtilities.Gestures;
-
-namespace KinectUtilities
+namespace ToolBox.FileUtilities
 {
-    public static class KinectSerializer
+    public static class Serializer
     {
         public static void SerializeToXml<T>(T obj, string fileName)
         {
@@ -47,7 +45,7 @@ namespace KinectUtilities
             Stream stream = File.Open(filename, FileMode.Create);
             BinaryFormatter bFormatter = new BinaryFormatter();
             bFormatter.Serialize(stream, item);
-            stream.Close(); 
+            stream.Close();
         }
         public static T DeserializeObject<T>(string filename)
         {

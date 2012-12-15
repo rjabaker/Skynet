@@ -65,6 +65,7 @@
     <Compile Include="Gesture Recognition\MovingGestureTree.cs" />
     <Compile Include="Interfacing\RenderCanvas.CanvasPlayer.cs" />
     <Compile Include="Interfacing\RenderCanvas.cs" />
+    <Compile Include="Joint Tracking\JointController.cs" />
     <Compile Include="Kinect Sensor\SensorMode.cs" />
     <Compile Include="Settings Access\GestureStandardToleranceParameters.cs" />
     <Compile Include="Settings\GestureStandardToleranceParameters.Designer.cs">
@@ -72,15 +73,16 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>GestureStandardToleranceParameters.settings</DependentUpon>
     </Compile>
-    <Compile Include="Skeleton\SkeletonCapturingFunction.cs" />
+    <Compile Include="Skeleton\ISkeletonCapturingFunction.cs" />
+    <Compile Include="Skeleton\SkeletonCaptureData.cs" />
     <Compile Include="Skeleton\SkeletonController.cs" />
     <Compile Include="Skeleton\SkeletonRenderFrame.cs" />
     <Compile Include="Skeleton\SkeletonRenderFrames.cs" />
     <Compile Include="Utilities\DateTimeUtilities.cs" />
     <Compile Include="Utilities\GestureUtilities.cs" />
     <Compile Include="Utilities\ImagingUtilities.cs" />
+    <Compile Include="Utilities\JointUtilities.cs" />
     <Compile Include="Utilities\KinectEventUtilities.cs" />
-    <Compile Include="Utilities\KinectSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Skeleton\SkeletonRecognizer.cs" />
     <Compile Include="Skeleton\SkeletonRenderer.cs" />
@@ -90,7 +92,12 @@
   <ItemGroup>
     <Compile Include="Interfacing\RenderCanvas.CanvasMode.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ToolBox\ToolBox.csproj">
+      <Project>{69EDC945-42AC-4AB3-99B3-6332F0884EC1}</Project>
+      <Name>ToolBox</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Settings\GestureStandardToleranceParameters.settings">

@@ -199,6 +199,8 @@ namespace KinectUtilities.Gestures
         private void SetActiveGestureTrees()
         {
             // Assumes this gestureTrees collection is sorted.
+            // RBakerFlag -> Should sort active gestures so that gesture trees are ORDERED. That is, frame A should occur 
+            // before frame B, and its delta time span should be relative to that.
 
             activeGestureTrees = new List<GestureTree>();
             foreach (GestureTree gestureTree in gestureTrees)

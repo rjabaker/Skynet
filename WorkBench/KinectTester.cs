@@ -12,6 +12,8 @@ using System.Runtime.InteropServices;
 using Microsoft.Kinect;
 
 using KinectUtilities;
+using KinectUtilities.Gestures;
+using KinectUtilities.JointTracking;
 using ArduinoUtilities;
 using Skynet;
 
@@ -23,6 +25,9 @@ namespace WorkBench
 
         private SmartKinectSensor sensor;
         private RenderCanvas renderCanvas;
+        private GestureController gestureController;
+        private SkeletonRenderer skeletonRender;
+        private JointController jointController;
 
         private ArduinoSerialPort serialPort;
         private PinMapping cwAnalogPinMapping;
@@ -35,19 +40,25 @@ namespace WorkBench
 
             sensor = new SmartKinectSensor();
             renderCanvas = new RenderCanvas(TimeSpan.FromSeconds(10));
-            sensor.SkeletonController.SkeletonRendered += renderCanvas.SkeletonFrameCaptured;
-            sensor.SkeletonController.GestureCaptured += GestureCaptured;
             sensor.EnableSkeletonRenderingSensor();
 
             renderCanvas.ImageRendered += DisplayRenderedImage;
 
             capturedLabel.Visible = false;
-            sensor.SkeletonController.SkeletonCapturingFunctions.Add(SkeletonCapturingFunction.GestureCapturing);
-            sensor.SkeletonController.SkeletonCapturingFunctions.Add(SkeletonCapturingFunction.GestureCapturing);
-            sensor.SkeletonController.LoadTestGestures();
 
-            GestureBuilderForm test = new GestureBuilderForm(sensor);
-            test.Show();
+            jointController = new JointController();
+            gestureController = new GestureController();
+            skeletonRender = new SkeletonRenderer(sensor.Sensor);
+
+            sensor.SkeletonController.SkeletonCapturingFunctions.Add(jointController);
+            sensor.SkeletonController.SkeletonCapturingFunctions.Add(gestureController);
+            sensor.SkeletonController.SkeletonCapturingFunctions.Add(skeletonRender);
+
+            skeletonRender.SkeletonRendered += renderCanvas.SkeletonFrameCaptured;
+            gestureController.GestureCaptured += GestureCaptured;
+
+            //GestureBuilderForm test = new GestureBuilderForm(sensor);
+            //test.Show();
 
             // InitializeArduino();
         }

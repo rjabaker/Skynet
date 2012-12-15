@@ -10,6 +10,8 @@ using System.Threading;
 
 using Microsoft.Kinect;
 
+using ToolBox.FileUtilities;
+
 namespace KinectUtilities
 {
     /// <summary>
@@ -209,13 +211,13 @@ namespace KinectUtilities
         public void SaveCanvasFrames(string filename)
         {
             SetCanvasMode(Mode.Stopped);
-            KinectSerializer.SerializeObject<SkeletonRenderFrames>(filename, skeletonFrames);
+            Serializer.SerializeObject<SkeletonRenderFrames>(filename, skeletonFrames);
             RevertCanvasMode();
         }
         public void LoadCanvasFrames(string filename)
         {
             SetCanvasMode(Mode.Stopped);
-            skeletonFrames = KinectSerializer.DeserializeObject<SkeletonRenderFrames>(filename);
+            skeletonFrames = Serializer.DeserializeObject<SkeletonRenderFrames>(filename);
             RevertCanvasMode();
         }
 

@@ -9,7 +9,7 @@ using KinectUtilities;
 
 namespace KinectUtilities.Gestures
 {
-    public class GestureController
+    public class GestureController : ISkeletonCapturingFunction
     {
         #region Events
 
@@ -18,6 +18,8 @@ namespace KinectUtilities.Gestures
         #endregion
 
         #region Private Variables
+
+        private readonly object thisLock = new object();
 
         private List<MovingGestureTree> movingGestureTrees;
         private GestureBuilder gestureBuilder;
@@ -34,13 +36,29 @@ namespace KinectUtilities.Gestures
 
         #endregion
 
+        #region Properties
+
+        public object Lock
+        {
+            get
+            {
+                return thisLock;
+            }
+        }
+
+        #endregion
+
         #region Public Methods
 
-        public void ProcessSkeletonForGesture(Skeleton skeleton, DateTime timeStamp)
+        public void Execute(object data)
         {
-            foreach (MovingGestureTree movingGestureTree in movingGestureTrees)
+            Execute((SkeletonCaptureData)data);
+        }
+        public void Execute(SkeletonCaptureData data)
+        {
+            foreach (Skeleton skeleton in data.Skeletons)
             {
-                movingGestureTree.ProcessSkeletonForGesture(skeleton, timeStamp);
+                ProcessSkeletonForGesture(skeleton, data.TimeStamp);
             }
         }
 
@@ -61,6 +79,18 @@ namespace KinectUtilities.Gestures
         #endregion
 
         #region Private Methods
+
+        private void ProcessSkeletonForGesture(Skeleton skeleton, DateTime timeStamp)
+        {
+            foreach (MovingGestureTree movingGestureTree in movingGestureTrees)
+            {
+                movingGestureTree.ProcessSkeletonForGesture(skeleton, timeStamp);
+            }
+        }
+
+        #endregion
+
+        #region Event Handlers
 
         private void movingGestureTree_GestureCaptured(IGesture gesture, DateTime timeStamp)
         {
