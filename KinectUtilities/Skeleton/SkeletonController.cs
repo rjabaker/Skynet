@@ -53,13 +53,6 @@ namespace KinectUtilities
                 numberOfSkeletonsToRecognize = value;
             }
         }
-        public List<ISkeletonCapturingFunction> SkeletonCapturingFunctions
-        {
-            get
-            {
-                return capturingFunctions;
-            }
-        }
 
         #endregion
 
@@ -72,8 +65,7 @@ namespace KinectUtilities
 
             foreach (ISkeletonCapturingFunction capturingFunction in capturingFunctions)
             {
-                Thread thread = new Thread(new ParameterizedThreadStart(capturingFunction.Execute));
-                thread.Start(data);
+                ExecuteCapturingFunction(capturingFunction, data);
             }
         }
         public void CaptureSkeletonData(Skeleton[] skeletonData, ColorImageFrame imageFrame, DateTime timeStamp)
@@ -83,14 +75,43 @@ namespace KinectUtilities
 
             foreach (ISkeletonCapturingFunction capturingFunction in capturingFunctions)
             {
-                Thread thread = new Thread(new ParameterizedThreadStart(capturingFunction.Execute));
-                thread.Start(data);
+                ExecuteCapturingFunction(capturingFunction, data);
             }
+        }
+
+        public void AddFunction(ISkeletonCapturingFunction function)
+        {
+            capturingFunctions.Add(function);
+            capturingFunctions.OrderByDescending(f => f.Priority);
+        }
+        public bool ContainsFunction(ISkeletonCapturingFunction function)
+        {
+            return capturingFunctions.Contains(function);
+        }
+        public bool RemoveFunction(ISkeletonCapturingFunction function)
+        {
+            return capturingFunctions.Remove(function);
         }
 
         #endregion
 
         #region Private Methods
+
+        private void ExecuteCapturingFunction(ISkeletonCapturingFunction capturingFunction, SkeletonCaptureData data)
+        {
+            if (capturingFunction.LongOperation)
+            {
+                lock (capturingFunction.Lock)
+                {
+                    Thread thread = new Thread(new ParameterizedThreadStart(capturingFunction.Execute));
+                    thread.Start(data);
+                }
+            }
+            else
+            {
+                capturingFunction.Execute(data);
+            }
+        }
 
         private List<Skeleton> RecognizeSkeletons(Skeleton[] skeletonData)
         {

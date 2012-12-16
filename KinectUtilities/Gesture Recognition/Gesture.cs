@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using Microsoft.Kinect;
 
 using KinectUtilities;
+using KinectUtilities.Gestures;
 
 namespace KinectUtilities
 {

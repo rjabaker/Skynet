@@ -20,6 +20,8 @@ namespace KinectUtilities.Gestures
         #region Private Variables
 
         private readonly object thisLock = new object();
+        private SkeletonCapturingFunctionPriority priority;
+        private bool longOperation;
 
         private List<MovingGestureTree> movingGestureTrees;
         private GestureBuilder gestureBuilder;
@@ -32,6 +34,8 @@ namespace KinectUtilities.Gestures
         {
             this.movingGestureTrees = new List<MovingGestureTree>();
             this.gestureBuilder = new GestureBuilder();
+            this.longOperation = true;
+            this.priority = SkeletonCapturingFunctionPriority.Normal;
         }
 
         #endregion
@@ -43,6 +47,20 @@ namespace KinectUtilities.Gestures
             get
             {
                 return thisLock;
+            }
+        }
+        public SkeletonCapturingFunctionPriority Priority
+        {
+            get
+            {
+                return priority;
+            }
+        }
+        public bool LongOperation
+        {
+            get
+            {
+                return longOperation;
             }
         }
 

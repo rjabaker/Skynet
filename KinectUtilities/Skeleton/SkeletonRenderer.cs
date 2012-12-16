@@ -21,6 +21,8 @@ namespace KinectUtilities
         #region Private Variables
 
         private readonly object thisLock = new object();
+        private SkeletonCapturingFunctionPriority priority;
+        private bool longOperation;
 
         private KinectSensor sensor;
         private Bitmap defaultBitmap;
@@ -33,11 +35,15 @@ namespace KinectUtilities
         {
             this.sensor = sensor;
             this.defaultBitmap = ImagingUtilities.CreateDefaultBitmap(new Size(sensor.ColorStream.FrameWidth, sensor.ColorStream.FrameHeight), Color.Black);
+            this.longOperation = false;
+            this.priority = SkeletonCapturingFunctionPriority.Critical;
         }
         public SkeletonRenderer(KinectSensor sensor, Bitmap defaultBitmap)
         {
             this.sensor = sensor;
             this.defaultBitmap = defaultBitmap;
+            this.longOperation = false;
+            this.priority = SkeletonCapturingFunctionPriority.Critical;
         }
 
         #endregion
@@ -71,6 +77,20 @@ namespace KinectUtilities
             get
             {
                 return thisLock;
+            }
+        }
+        public bool LongOperation
+        {
+            get
+            {
+                return longOperation;
+            }
+        }
+        public SkeletonCapturingFunctionPriority Priority
+        {
+            get
+            {
+                return priority;
             }
         }
 

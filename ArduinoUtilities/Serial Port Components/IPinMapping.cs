@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ArduinoUtilities
 {
-    public interface IComponentMapping
+    public interface IPinMapping
     {
         #region Properties
 

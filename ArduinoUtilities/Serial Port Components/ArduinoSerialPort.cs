@@ -14,7 +14,7 @@ namespace ArduinoUtilities
         private string portName;
         private int baudRate;
 
-        private ComponentMappings componentMappings;
+        private PinMappings componentMappings;
 
         #endregion
 
@@ -28,14 +28,14 @@ namespace ArduinoUtilities
             this.serialPort.DataReceived += new SerialDataReceivedEventHandler(DataRecievedEventHandler);
             // RBakerFlag -> Set up a handshake?
 
-            this.componentMappings = new ComponentMappings(SetPinEventHandler, ToggleListeningForResponsePackageEventHandler);
+            this.componentMappings = new PinMappings(SetPinEventHandler, ToggleListeningForResponsePackageEventHandler);
         }
 
         #endregion
 
         #region Properties
 
-        public ComponentMappings ComponentMappings
+        public PinMappings ComponentMappings
         {
             get
             {
@@ -68,7 +68,7 @@ namespace ArduinoUtilities
             if (serialPort.IsOpen) serialPort.Write(commandPackage, 0, commandPackage.Length);
         }
 
-        private void ToggleListeningForResponsePackageEventHandler(IComponentMapping componentMapping, bool listen)
+        private void ToggleListeningForResponsePackageEventHandler(IPinMapping componentMapping, bool listen)
         {
             // Toggle listening for a response package. Only allow each component mapping to have one listener.
 

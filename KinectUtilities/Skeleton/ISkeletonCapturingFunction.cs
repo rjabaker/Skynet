@@ -10,6 +10,8 @@ namespace KinectUtilities
         #region Properties
 
         object Lock { get; }
+        bool LongOperation { get; }
+        SkeletonCapturingFunctionPriority Priority { get; }
 
         #endregion
 

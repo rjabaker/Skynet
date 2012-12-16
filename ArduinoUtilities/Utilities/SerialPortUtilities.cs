@@ -10,7 +10,7 @@ namespace ArduinoUtilities
     {
         #region Delegates
 
-        public delegate void ToggleListeningForResponsePackageEventHandler(IComponentMapping componentMapping, bool listen);
+        public delegate void ToggleListeningForResponsePackageEventHandler(IPinMapping componentMapping, bool listen);
         public delegate void ResponsePackageRecievedEventHandler(byte responsePackage);
 
         #endregion

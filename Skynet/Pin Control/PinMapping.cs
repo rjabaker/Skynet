@@ -7,7 +7,7 @@ using ArduinoUtilities;
 
 namespace Skynet
 {
-    public class PinMapping : IComponentMapping
+    public class PinMapping : IPinMapping
     {
         #region Events
 
@@ -129,7 +129,7 @@ namespace Skynet
         {
             // Build a digital command package. Listen for a response package. Set the pin.
             byte[] commandPackage = DigitalWriteCommandPackageCode(turnOn);
-            toggleListeningForResponePackageEventHandler((IComponentMapping)this, true);
+            toggleListeningForResponePackageEventHandler((IPinMapping)this, true);
             SetPinEventHandler(commandPackage);
         }
 
@@ -137,14 +137,14 @@ namespace Skynet
         {
             // Build an analog command package. Listen for a response package. Set the pin.
             byte[] commandPackage = AnalogWriteCommandPackageCode(intensity);
-            toggleListeningForResponePackageEventHandler((IComponentMapping)this, true);
+            toggleListeningForResponePackageEventHandler((IPinMapping)this, true);
             SetPinEventHandler(commandPackage);
         }
 
         public void SetPinMode(int pinMode)
         {
             byte[] commandPackage = SetPinModeCommandPackageCode(pinMode);
-            toggleListeningForResponePackageEventHandler((IComponentMapping)this, true);
+            toggleListeningForResponePackageEventHandler((IPinMapping)this, true);
             SetPinEventHandler(commandPackage);
         }
 
@@ -189,7 +189,7 @@ namespace Skynet
             if (belongsToPin)
             {
                 // Stop listening for a response package. Read the pin state and send it out to the listeners.
-                toggleListeningForResponePackageEventHandler((IComponentMapping)this, false);
+                toggleListeningForResponePackageEventHandler((IPinMapping)this, false);
                 int state = ArduinoPinUtilities.ReadPinState(responsePackage);
                 PinFeedback feedback = new PinFeedback(pinNumber, state);
                 if (FeedbackEvent != null) FeedbackEvent(feedback);

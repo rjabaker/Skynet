@@ -50,12 +50,13 @@ namespace WorkBench
             gestureController = new GestureController();
             skeletonRender = new SkeletonRenderer(sensor.Sensor);
 
-            sensor.SkeletonController.SkeletonCapturingFunctions.Add(jointController);
-            sensor.SkeletonController.SkeletonCapturingFunctions.Add(gestureController);
-            sensor.SkeletonController.SkeletonCapturingFunctions.Add(skeletonRender);
+            sensor.SkeletonController.AddFunction(jointController);
+            sensor.SkeletonController.AddFunction(gestureController);
+            sensor.SkeletonController.AddFunction(skeletonRender);
 
             skeletonRender.SkeletonRendered += renderCanvas.SkeletonFrameCaptured;
             gestureController.GestureCaptured += GestureCaptured;
+            jointController.JointTrackingCaptured += JointTrackingCaptured;
 
             //GestureBuilderForm test = new GestureBuilderForm(sensor);
             //test.Show();
@@ -90,6 +91,14 @@ namespace WorkBench
             else
             {
                 skeletonPicture.Image = image;
+            }
+        }
+
+        public void JointTrackingCaptured(KinectUtilities.JointTracking.MovingJoint joint, DateTime timeStamp)
+        {
+            if (joint.JointType == KinectUtilities.JointTracking.JointType.ElbowRight)
+            {
+                jointTrackingUpdateTextBox.Text = joint.BendAngle.ToString();
             }
         }
 

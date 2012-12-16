@@ -50,7 +50,7 @@ namespace KinectUtilities
             this.skeletonRenderer.SkeletonRendered += renderCanvas.SkeletonFrameCaptured;
             this.renderCanvas.ImageRendered += new ImagingUtilities.ImageRenderedEventHandler(renderCanvas_ImageRendered);
             this.renderCanvas.ReplayCanvasComplete += new ImagingUtilities.ImageRenderingCompleteEventHandler(renderCanvas_ReplayCanvasComplete);
-            this.sensor.SkeletonController.SkeletonCapturingFunctions.Add(this.skeletonRenderer);
+            this.sensor.SkeletonController.AddFunction(this.skeletonRenderer);
 
             this.recording = true;
             this.replaying = false;

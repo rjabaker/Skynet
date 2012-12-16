@@ -31,6 +31,7 @@
             this.skeletonPicture = new System.Windows.Forms.PictureBox();
             this.capturedLabel = new System.Windows.Forms.Label();
             this.replayButton = new System.Windows.Forms.Button();
+            this.jointTrackingUpdateTextBox = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.skeletonPicture)).BeginInit();
             this.SuspendLayout();
             // 
@@ -63,11 +64,20 @@
             this.replayButton.UseVisualStyleBackColor = true;
             this.replayButton.Click += new System.EventHandler(this.replayButton_Click);
             // 
+            // jointTrackingUpdateTextBox
+            // 
+            this.jointTrackingUpdateTextBox.FormattingEnabled = true;
+            this.jointTrackingUpdateTextBox.Location = new System.Drawing.Point(547, 298);
+            this.jointTrackingUpdateTextBox.Name = "jointTrackingUpdateTextBox";
+            this.jointTrackingUpdateTextBox.Size = new System.Drawing.Size(142, 17);
+            this.jointTrackingUpdateTextBox.TabIndex = 3;
+            // 
             // KinectTester
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(891, 540);
+            this.Controls.Add(this.jointTrackingUpdateTextBox);
             this.Controls.Add(this.replayButton);
             this.Controls.Add(this.capturedLabel);
             this.Controls.Add(this.skeletonPicture);
@@ -84,5 +94,6 @@
         private System.Windows.Forms.PictureBox skeletonPicture;
         private System.Windows.Forms.Label capturedLabel;
         private System.Windows.Forms.Button replayButton;
+        private System.Windows.Forms.ListBox jointTrackingUpdateTextBox;
     }
 }

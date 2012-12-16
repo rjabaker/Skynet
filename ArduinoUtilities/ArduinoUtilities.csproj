@@ -44,8 +44,8 @@
     <Compile Include="Serial Port Components\ArduinoSerialPort.cs" />
     <Compile Include="Settings Access\CommandCodes.cs" />
     <Compile Include="Settings Access\CommandCommunicationSettings.cs" />
-    <Compile Include="Serial Port Components\ComponentMappings.cs" />
-    <Compile Include="Serial Port Components\IComponentMapping.cs" />
+    <Compile Include="Serial Port Components\PinMappings.cs" />
+    <Compile Include="Serial Port Components\IPinMapping.cs" />
     <Compile Include="Settings Access\ResponseCommunicationSettings.cs" />
     <Compile Include="Settings Access\SetPinModeStateCodes.cs" />
     <Compile Include="Settings\SetPinModeStateCodes.Designer.cs">

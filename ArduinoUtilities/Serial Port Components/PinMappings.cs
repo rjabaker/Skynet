@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ArduinoUtilities
 {
-    public class ComponentMappings : IList<IComponentMapping>
+    public class PinMappings : IList<IPinMapping>
     {
         #region Public Events
 
@@ -16,7 +16,7 @@ namespace ArduinoUtilities
 
         #region Private Variables
 
-        private List<IComponentMapping> componentMappings;
+        private List<IPinMapping> componentMappings;
         private ArduinoPinUtilities.SetPinEventHandler setPinEventHandler;
         private SerialPortUtilities.ToggleListeningForResponsePackageEventHandler toggleListeningForResponsePackageEventHandler;
 
@@ -24,9 +24,9 @@ namespace ArduinoUtilities
 
         #region Constructors
 
-        public ComponentMappings(ArduinoPinUtilities.SetPinEventHandler setPinEventHandler, SerialPortUtilities.ToggleListeningForResponsePackageEventHandler toggleListeningForResponsePackageEventHandler)
+        public PinMappings(ArduinoPinUtilities.SetPinEventHandler setPinEventHandler, SerialPortUtilities.ToggleListeningForResponsePackageEventHandler toggleListeningForResponsePackageEventHandler)
         {
-            this.componentMappings = new List<IComponentMapping>();
+            this.componentMappings = new List<IPinMapping>();
             this.setPinEventHandler = setPinEventHandler;
             this.toggleListeningForResponsePackageEventHandler = toggleListeningForResponsePackageEventHandler;
         }
@@ -35,7 +35,7 @@ namespace ArduinoUtilities
 
         #region Properties
 
-        public IComponentMapping this[int index]
+        public IPinMapping this[int index]
         {
             get
             {
@@ -56,7 +56,7 @@ namespace ArduinoUtilities
             set
             {
                 setPinEventHandler = value;
-                foreach (IComponentMapping mapping in componentMappings)
+                foreach (IPinMapping mapping in componentMappings)
                 {
                     mapping.SetPinEventHandler = setPinEventHandler;
                 }
@@ -72,7 +72,7 @@ namespace ArduinoUtilities
             set
             {
                 toggleListeningForResponsePackageEventHandler = value;
-                foreach (IComponentMapping mapping in componentMappings)
+                foreach (IPinMapping mapping in componentMappings)
                 {
                     mapping.ToggleListeningForResponsePackageEventHandler = toggleListeningForResponsePackageEventHandler;
                 }
@@ -104,12 +104,12 @@ namespace ArduinoUtilities
             if (ResponseEvent != null) ResponseEvent(responsePackage);
         }
 
-        public int IndexOf(IComponentMapping item)
+        public int IndexOf(IPinMapping item)
         {
             return componentMappings.IndexOf(item);
         }
 
-        public void Insert(int index, IComponentMapping item)
+        public void Insert(int index, IPinMapping item)
         {
             componentMappings.Insert(index, item);
             item.SetPinEventHandler = setPinEventHandler;
@@ -121,7 +121,7 @@ namespace ArduinoUtilities
             componentMappings.RemoveAt(index);
         }
 
-        public void Add(IComponentMapping item)
+        public void Add(IPinMapping item)
         {
             componentMappings.Add(item);
             item.SetPinEventHandler = setPinEventHandler;
@@ -133,22 +133,22 @@ namespace ArduinoUtilities
             componentMappings.Clear();
         }
 
-        public bool Contains(IComponentMapping item)
+        public bool Contains(IPinMapping item)
         {
             return componentMappings.Contains(item);
         }
 
-        public void CopyTo(IComponentMapping[] array, int arrayIndex)
+        public void CopyTo(IPinMapping[] array, int arrayIndex)
         {
             componentMappings.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(IComponentMapping item)
+        public bool Remove(IPinMapping item)
         {
             return componentMappings.Remove(item);
         }
 
-        public IEnumerator<IComponentMapping> GetEnumerator()
+        public IEnumerator<IPinMapping> GetEnumerator()
         {
             throw new NotImplementedException();
         }

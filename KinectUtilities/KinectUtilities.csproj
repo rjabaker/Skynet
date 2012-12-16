@@ -65,7 +65,10 @@
     <Compile Include="Gesture Recognition\MovingGestureTree.cs" />
     <Compile Include="Interfacing\RenderCanvas.CanvasPlayer.cs" />
     <Compile Include="Interfacing\RenderCanvas.cs" />
+    <Compile Include="Joint Tracking\Joint.cs" />
     <Compile Include="Joint Tracking\JointController.cs" />
+    <Compile Include="Joint Tracking\JointType.cs" />
+    <Compile Include="Joint Tracking\MovingJoint.cs" />
     <Compile Include="Kinect Sensor\SensorMode.cs" />
     <Compile Include="Settings Access\GestureStandardToleranceParameters.cs" />
     <Compile Include="Settings\GestureStandardToleranceParameters.Designer.cs">
@@ -75,6 +78,7 @@
     </Compile>
     <Compile Include="Skeleton\ISkeletonCapturingFunction.cs" />
     <Compile Include="Skeleton\SkeletonCaptureData.cs" />
+    <Compile Include="Skeleton\SkeletonCapturingFunctionPriority.cs" />
     <Compile Include="Skeleton\SkeletonController.cs" />
     <Compile Include="Skeleton\SkeletonRenderFrame.cs" />
     <Compile Include="Skeleton\SkeletonRenderFrames.cs" />
