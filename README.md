@@ -1,12 +1,16 @@
-## Source for the Arduino Part of the project
+## Skynet
 
-## Checkout
-```sh
-Needs to be updated!
-```
-## Build Instructions
+Skynet's final objective is to use Microsoft Kinect to control a robotic hand. Use this project in conjunction with rjabaker/arduino, which reads data from the serial port to control output pins on an Arduino board.
 
-<b> RBaker: November 18, 2012 </b>
+#### Design
 
-The kinect code only runs with the Arduino board connected to COM5 (though this can be adjusted within the code in the WorkBench testing project) and the arduino code uploaded to the board. Individually build the ArduinoUtilities and Skynet projects. Then, build and debug the WorkBench project. The WorkBench project will open a form in which there is a button and a text box. Clicking the button will turn on an LED (at pin 13) on the Arduino board. The text box will be populated with the on/off status of the pin, which is recieved from the board to simulate feedback.
+Skynet is composed of three major components:
+
+- KinectUtilities: This project interfaces with Microsoft Kinect. It reads Skelton frames from the sensor, mining joint information from the provided .NET objects. These frames are also studied for gestures. Events are fired in response to captured gestures/tracked joints.
+- ArduinoUtilities: This project sends and recieves byte packages from the serial port, communicating with an Arduino.
+- Skynet: Acting as the middle-man between the KinectUtilities and ArduinoUtilities projects, Skynet recieves gesture/joint information for the sensor, determines the appropriate pin commands that need to occur, and fires byte packages to an Arduino via ArduinoUtilities.
+
+#### Current State
+
+Currently, this project tracks Skeleton joint positions and gestures. In response to this information, it writes corresponding pin commands into the serial port for an Arduino board to respond to.
 
