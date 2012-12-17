@@ -21,6 +21,7 @@ namespace WorkBench
 {
     public partial class KinectTester : Form
     {
+        private delegate void UpdateBendAngleEventHandler(MovingJoint joint, DateTime timeStamp);
         private delegate void DisplayRenderedImageEventHandler(Bitmap image, DateTime timeStamp);
 
         private SmartKinectSensor sensor;
@@ -33,6 +34,9 @@ namespace WorkBench
         private PinMapping cwAnalogPinMapping;
         private PinMapping ccwAnalogPinMapping;
         private PinMapping eStop;
+
+        private int bendAngleFrameCount = 0;
+        private int updateFrequency = 6;
 
         public KinectTester()
         {
@@ -94,11 +98,34 @@ namespace WorkBench
             }
         }
 
+        public void UpdateJointBendAngle(MovingJoint joint, DateTime timeStamp)
+        {
+            if (this.InvokeRequired)
+            {
+                UpdateBendAngleEventHandler d = new UpdateBendAngleEventHandler(UpdateJointBendAngle);
+                this.Invoke(d, new object[] { joint, timeStamp });
+            }
+            else
+            {
+                //jointTrackingUpdateTextBox.BeginUpdate();
+                jointTrackingUpdateTextBox.Text = joint.BendAngle.ToString();
+                //jointTrackingUpdateTextBox.EndUpdate();
+            }
+        }
+
         public void JointTrackingCaptured(KinectUtilities.JointTracking.MovingJoint joint, DateTime timeStamp)
         {
             if (joint.JointType == KinectUtilities.JointTracking.JointType.ElbowRight)
             {
-                jointTrackingUpdateTextBox.Text = joint.BendAngle.ToString();
+                if (bendAngleFrameCount % updateFrequency == 0)
+                {
+                    bendAngleFrameCount = 1;
+                    UpdateJointBendAngle(joint, timeStamp);
+                }
+                else
+                {
+                    bendAngleFrameCount++;
+                }
             }
         }
 
