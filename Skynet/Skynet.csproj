@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Kinect, Version=1.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,6 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Listening\AngularVelocityJointControlType.cs" />
+    <Compile Include="Listening\AngularVelocityJointFrameParameter.cs" />
+    <Compile Include="Listening\IBodyTracker.cs" />
+    <Compile Include="Listening\IJointFrameParameter.cs" />
+    <Compile Include="Listening\IJointControlType.cs" />
+    <Compile Include="Listening\KinectBodyTracker.cs" />
     <Compile Include="Pin Control\SmartPinMapping.cs" />
     <Compile Include="Shapes\Finger.cs" />
     <Compile Include="Shapes\Fingers.cs" />
@@ -61,7 +68,12 @@
       <Project>{63739152-BAFA-4953-A685-BFE12886635F}</Project>
       <Name>ArduinoUtilities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\KinectUtilities\KinectUtilities.csproj">
+      <Project>{60131c3a-ce73-4c80-8e68-1773bb5bd4c3}</Project>
+      <Name>KinectUtilities</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
