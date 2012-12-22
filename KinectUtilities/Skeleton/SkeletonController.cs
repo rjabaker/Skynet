@@ -10,7 +10,7 @@ using System.Threading;
 using Microsoft.Kinect;
 
 using KinectUtilities.Gestures;
-using ToolBox.FileUtilities;
+using ToolBox.Functions;
 
 namespace KinectUtilities
 {

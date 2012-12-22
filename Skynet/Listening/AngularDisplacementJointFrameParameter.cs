@@ -4,24 +4,27 @@ using System.Linq;
 using System.Text;
 
 using KinectUtilities.JointTracking;
+using ToolBox.Functions;
 
 namespace Skynet
 {
-    public class AngularVelocityJointFrameParameter : IJointFrameParameter
+    public class AngularDisplacementJointFrameParameter : IJointFrameParameter
     {
         #region Private Methods
 
         private MovingJoint movingJoint;
         private TimeSpan timeSpan;
+        private double bendAngle;
 
         #endregion
 
-        #region Constructors
+        #region Properties
 
-        public AngularVelocityJointFrameParameter(MovingJoint movingJoint, TimeSpan timeSpan)
+        public AngularDisplacementJointFrameParameter(MovingJoint thisMovingJoint, MovingJoint previousMovingJoint, TimeSpan timeSpan)
         {
-            this.movingJoint = movingJoint;
+            this.movingJoint = thisMovingJoint;
             this.timeSpan = timeSpan;
+            this.bendAngle = previousMovingJoint == null ? thisMovingJoint.BendAngle : thisMovingJoint.BendAngle - previousMovingJoint.BendAngle;
         }
 
         #endregion
@@ -32,7 +35,7 @@ namespace Skynet
         {
             get
             {
-                return movingJoint.BendAngle;
+                return bendAngle;
             }
         }
         public TimeSpan TimeSpan

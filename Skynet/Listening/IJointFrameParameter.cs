@@ -9,6 +9,8 @@ namespace Skynet
     {
         #region Properties
 
+        double BendAngle { get; }
+        TimeSpan TimeSpan { get; }
 
         #endregion
 

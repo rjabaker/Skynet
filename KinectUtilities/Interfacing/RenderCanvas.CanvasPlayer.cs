@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
+using ToolBox.Functions;
+
 namespace KinectUtilities
 {
     public partial class RenderCanvas

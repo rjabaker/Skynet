@@ -82,7 +82,6 @@
     <Compile Include="Skeleton\SkeletonController.cs" />
     <Compile Include="Skeleton\SkeletonRenderFrame.cs" />
     <Compile Include="Skeleton\SkeletonRenderFrames.cs" />
-    <Compile Include="Utilities\DateTimeUtilities.cs" />
     <Compile Include="Utilities\GestureUtilities.cs" />
     <Compile Include="Utilities\ImagingUtilities.cs" />
     <Compile Include="Utilities\JointUtilities.cs" />

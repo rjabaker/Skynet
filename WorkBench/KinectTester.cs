@@ -38,6 +38,8 @@ namespace WorkBench
         private int bendAngleFrameCount = 0;
         private int updateFrequency = 6;
 
+        private KinectBodyTracker bodyTracker;
+
         public KinectTester()
         {
             InitializeComponent();
@@ -61,6 +63,10 @@ namespace WorkBench
             skeletonRender.SkeletonRendered += renderCanvas.SkeletonFrameCaptured;
             gestureController.GestureCaptured += GestureCaptured;
             jointController.JointTrackingCaptured += JointTrackingCaptured;
+
+            ArduinoSerialPort serialPort = new ArduinoSerialPort("COM5", 115200);
+            serialPort.Open();
+            bodyTracker = new KinectBodyTracker(sensor, serialPort);
 
             //GestureBuilderForm test = new GestureBuilderForm(sensor);
             //test.Show();

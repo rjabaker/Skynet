@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using KinectUtilities.JointTracking;
+
 namespace Skynet
 {
     public class Joints : IList<Joint>
@@ -58,6 +60,20 @@ namespace Skynet
 
         #region Public Methods
 
+        public Joints GetJointsOfType(JointType jointType)
+        {
+            Joints joints = new Joints();
+            foreach (Joint joint in this)
+            {
+                if (joint.JointType == jointType)
+                {
+                    joints.Add(joint);
+                }
+            }
+
+            return joints;
+        }
+
         public int IndexOf(Joint joint)
         {
             return joints.IndexOf(joint);
@@ -100,12 +116,12 @@ namespace Skynet
 
         public IEnumerator<Joint> GetEnumerator()
         {
-            throw new NotImplementedException();
+            return this.joints.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return GetEnumerator();
         }
 
         #endregion

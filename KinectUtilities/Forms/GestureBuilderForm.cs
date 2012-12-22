@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 
 using KinectUtilities.Gestures;
-using ToolBox.FileUtilities;
+using ToolBox.Functions;
 
 namespace KinectUtilities
 {

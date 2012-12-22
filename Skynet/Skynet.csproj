@@ -41,11 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Listening\AngularVelocityJointControlType.cs" />
+    <Compile Include="Listening\AngularDisplacementJointFrameParameter.cs" />
     <Compile Include="Listening\AngularVelocityJointFrameParameter.cs" />
     <Compile Include="Listening\IBodyTracker.cs" />
     <Compile Include="Listening\IJointFrameParameter.cs" />
-    <Compile Include="Listening\IJointControlType.cs" />
     <Compile Include="Listening\KinectBodyTracker.cs" />
     <Compile Include="Pin Control\SmartPinMapping.cs" />
     <Compile Include="Shapes\Finger.cs" />
@@ -71,6 +70,10 @@
     <ProjectReference Include="..\KinectUtilities\KinectUtilities.csproj">
       <Project>{60131c3a-ce73-4c80-8e68-1773bb5bd4c3}</Project>
       <Name>KinectUtilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ToolBox\ToolBox.csproj">
+      <Project>{69EDC945-42AC-4AB3-99B3-6332F0884EC1}</Project>
+      <Name>ToolBox</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

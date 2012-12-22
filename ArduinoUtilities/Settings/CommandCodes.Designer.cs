@@ -58,5 +58,14 @@ namespace ArduinoUtilities.Settings {
                 return ((int)(this["SetPinModeCommandCode"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int SetStepper1CommandCode {
+            get {
+                return ((int)(this["SetStepper1CommandCode"]));
+            }
+        }
     }
 }

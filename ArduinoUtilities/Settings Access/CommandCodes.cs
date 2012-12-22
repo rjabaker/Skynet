@@ -38,5 +38,13 @@ namespace ArduinoUtilities
                 return Settings.CommandCodes.Default.SetPinModeCommandCode;
             }
         }
+
+        public static int SetStepper1CommandCode
+        {
+            get
+            {
+                return Settings.CommandCodes.Default.SetStepper1CommandCode;
+            }
+        }
     }
 }

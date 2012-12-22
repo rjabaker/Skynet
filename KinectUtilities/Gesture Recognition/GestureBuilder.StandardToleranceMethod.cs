@@ -5,6 +5,8 @@ using System.Text;
 
 using Microsoft.Kinect;
 
+using ToolBox.Functions;
+
 namespace KinectUtilities.Gestures
 {
     public partial class GestureBuilder

@@ -93,7 +93,7 @@ namespace KinectUtilities.JointTracking
                 Vertex3[] connectedJointPositions = GetJointPositions(skeleton, connectedJoints);
 
                 Vector3 boneA = new Vector3(connectedJointPositions[0], jointPosition);
-                Vector3 boneB = new Vector3(jointPosition, connectedJointPositions[1]);
+                Vector3 boneB = new Vector3(connectedJointPositions[1], jointPosition);
                 double bendAngle = Vector3Functions.Angle(boneA, boneB);
 
                 MovingJoint movingJoint = new MovingJoint(jointType, jointPosition, bendAngle);

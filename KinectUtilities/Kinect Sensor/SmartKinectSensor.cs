@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Kinect;
 
 using KinectUtilities.Gestures;
+using ToolBox.Functions;
 
 namespace KinectUtilities
 {
@@ -106,11 +107,6 @@ namespace KinectUtilities
             this.sensor.SkeletonStream.AppChoosesSkeletons = true;
             this.sensor.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(sensor_SkeletonFrameReadyForSkeletonRendering);
             this.sensorMode = SensorMode.SkeletonRendering;
-
-            //if (!this.skeletonController.SkeletonCapturingFunctions.Contains(SkeletonCapturingFunction.SkeletonRendering))
-            //{
-            //    this.skeletonController.SkeletonCapturingFunctionsa.Add(SkeletonCapturingFunction.SkeletonRendering);
-            //}
         }
         private void EnableFullImageSkeletonRendering()
         {
@@ -120,11 +116,6 @@ namespace KinectUtilities
             this.sensor.SkeletonStream.AppChoosesSkeletons = true;
             this.sensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(sensor_AllFramesReadyForFullImageSkeletonRendering);
             this.sensorMode = SensorMode.FullImageSkeletonRendering;
-
-            //if (!this.skeletonController.SkeletonCapturingFunctionsa.Contains(SkeletonCapturingFunction.SkeletonRendering))
-            //{
-            //    this.skeletonController.SkeletonCapturingFunctionsa.Add(SkeletonCapturingFunction.SkeletonRendering);
-            //}
         }
 
         #endregion

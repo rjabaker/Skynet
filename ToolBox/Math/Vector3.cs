@@ -17,11 +17,11 @@ namespace ToolBox.Math
 
         public Vector3(Vertex3 point)
         {
-            this.line = new Vertex3[] { new Vertex3(), point };
+            this.line = new Vertex3[] { new Vertex3(0, 0, 0), point };
         }
         public Vector3(Vertex3 startVertex, Vertex3 endVertex)
         {
-            this.line = new Vertex3[] { new Vertex3(), endVertex - startVertex };
+            this.line = new Vertex3[] { new Vertex3(0, 0, 0), endVertex - startVertex };
         }
 
         #endregion

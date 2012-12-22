@@ -12,7 +12,7 @@ namespace ToolBox.Math
             double dot = (a * b);
             double ab = a.Magnitude() * b.Magnitude();
 
-            return System.Math.Cos(dot / ab);
+            return System.Math.Acos(dot / ab);
         }
     }
 }

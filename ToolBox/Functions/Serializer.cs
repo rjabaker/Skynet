@@ -7,7 +7,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace ToolBox.FileUtilities
+namespace ToolBox.Functions
 {
     public static class Serializer
     {

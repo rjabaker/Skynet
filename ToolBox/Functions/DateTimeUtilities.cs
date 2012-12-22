@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace KinectUtilities
+namespace ToolBox.Functions
 {
     public static class DateTimeUtilities
     {
