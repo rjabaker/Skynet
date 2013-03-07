@@ -89,7 +89,7 @@ namespace Skynet
 
         #endregion
 
-        #region EventHandlers
+        #region Event Handlers
 
         private void PinFeedbackRecievedEventHandler(PinFeedback feedback)
         {
