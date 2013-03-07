@@ -68,8 +68,8 @@ namespace WorkBench
             serialPort.Open();
             bodyTracker = new KinectBodyTracker(sensor, serialPort);
 
-            //GestureBuilderForm test = new GestureBuilderForm(sensor);
-            //test.Show();
+            GestureBuilderForm test = new GestureBuilderForm(sensor);
+            test.Show();
 
             // InitializeArduino();
         }
